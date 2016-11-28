@@ -34,17 +34,10 @@ public class BigIntTest {
     @Test
     public void testToString() {
         String num = "9021484789375297489789478923565365828490";
-        String leadingZeros = "0000000000000000000000000000000000000000";
         BigInt instance = new BigInt(num);
         
-        String expResult = leadingZeros + num;
-        
         String result = instance.toString();
-        assertEquals(expResult, result);
-        
-        instance = new BigInt();
-        assertEquals("00", instance.toString());
-        assertEquals("0", instance.toStringWithoutLeadingZeros());
+        assertEquals(num, result);
         
     }
     
@@ -54,11 +47,12 @@ public class BigIntTest {
         BigInt b = new BigInt("903590835045676745");
         String expResult = "907144594403650338";
         BigInt c = a.add(b);
-        assertEquals(expResult, c.toStringWithoutLeadingZeros());
-        assertEquals(c.spart, expResult.length());
+        assertEquals(expResult, c.toString());
         
         BigInt d = (new BigInt()).add(new BigInt("123"));
-        assertEquals("123", d.toStringWithoutLeadingZeros());
+        assertEquals("123", d.toString());
+        
+        assertEquals("3553759357973594", a.add(new BigInt("1")).toString());
     }
     
     @Test
@@ -67,27 +61,24 @@ public class BigIntTest {
         BigInt b = new BigInt("103");
         String expResult = "20";
         BigInt c = a.sub(b);
-        assertEquals(expResult, c.toStringWithoutLeadingZeros());
-        assertEquals(c.spart, expResult.length());
+        assertEquals(expResult, c.toString());
         
         a = new BigInt();
         b = new BigInt();
         c = a.sub(b);
-        assertEquals("0", c.toStringWithoutLeadingZeros());
+        assertEquals("0", c.toString());
         
         a = new BigInt("474586");
         b = new BigInt("1289");
         expResult = "473297";
         c = a.sub(b);
-        assertEquals(expResult, c.toStringWithoutLeadingZeros());
-        assertEquals(c.spart, expResult.length());
+        assertEquals(expResult, c.toString());
         
         a = new BigInt("899456");
         b = new BigInt("897988");
         expResult = "1468";
         c = a.sub(b);
-        assertEquals(expResult, c.toStringWithoutLeadingZeros());
-        assertEquals(c.spart, expResult.length());
+        assertEquals(expResult, c.toString());
     }
     
     @Test
@@ -96,15 +87,20 @@ public class BigIntTest {
         BigInt b = new BigInt("5");
         String expResult = "555";
         BigInt c = a.mul(b);
-        assertEquals(expResult, c.toStringWithoutLeadingZeros());
-        assertEquals(c.spart, expResult.length());
+        assertEquals(expResult, c.toString());
         
         a = new BigInt("434043568");
         b = new BigInt("999");
         expResult = "433609524432";
         c = a.mul(b);
-        assertEquals(expResult, c.toStringWithoutLeadingZeros());
-        assertEquals(c.spart, expResult.length());
+        assertEquals(expResult, c.toString());
+        
+        a = new BigInt();
+        b = new BigInt();
+        
+        assertEquals(a.mul(b).toString(), "0");
+        
+        assertEquals("0", a.mul(new BigInt("21313435334564566353")).toString());
         
     }
 

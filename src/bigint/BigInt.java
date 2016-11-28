@@ -3,24 +3,17 @@ package bigint;
 public class BigInt {
     
     int[] digits;
-    int size;
-    int spart;
-    boolean withLeadingZeros = true;
     BigIntOperations operations = new BigIntOperations();
     
     public static final int BASE = 10;
     
     public BigInt() {
-        digits = new int[2];
-        digits[0] = digits[1] = 0;
-        size = 2;
-        spart = 1;
+        digits = new int[1];
+        digits[0] = 0;
     }
     
     public BigInt(BigInt that) {
         this.digits = that.digits;
-        this.size = that.size;
-        this.spart = that.spart;
     }
     
     public BigInt(String num) {
@@ -29,10 +22,8 @@ public class BigInt {
             num = "0";
             length = 1;
         }
-        spart = length;
-        size = spart * 2;
-        digits = new int[size];
-        int j = size - 1;
+        digits = new int[length];
+        int j = length - 1;
         int val;
         for(int i = length - 1; i >= 0; i--) {
             val = Integer.parseInt(String.valueOf(num.charAt(i)));
@@ -41,60 +32,40 @@ public class BigInt {
         }
     }
     
-    public void initializeWithSize(int size) {
-        digits = new int[size];
-        this.size = size;
-        spart = 0;
+    public BigInt resize() {
+        if(isZero()) {
+            return this;
+        }
+        int idx = 0;
+        for(int i = 0; i < digits.length; i++) {
+            if(digits[i] != 0) {
+                idx = i;
+                break;
+            }
+            idx = i;
+        }
+        int newLength = digits.length - idx;
+        int[] newDigits = new int[newLength];
+        System.arraycopy(digits, idx, newDigits, 0, newLength);
+        digits = newDigits;
+        return this;
     }
     
-    public String toStringWithoutLeadingZeros() {
-        if(isZero()) {
-            return "0";
-        }
-        this.withLeadingZeros = false;
-        return toString();
+    public void initializeWithSize(int size) {
+        digits = new int[size];
     }
     
     @Override
     public String toString() {
         String s = "";
-        int startIndex = 0;
-        if(!withLeadingZeros) {
-            startIndex = getIndexOfFirstSignificantDigit();
-        }
-        for(int i = startIndex; i < digits.length; i++) {
+        for(int i = 0; i < digits.length; i++) {
             s = s + digits[i];
         }
-        this.withLeadingZeros = true;
         return s;
     }
     
-    public void resetSpart() {
-        for(int i = 0; i < digits.length; i++) {
-            if(digits[i] != 0) {
-                this.spart = digits.length - i;
-                return;
-            }
-        }
-        this.spart = 0;
-    }
-   
-    
-    public int getIndexOfFirstSignificantDigit() {
-        int i = size - spart;
-        if(i == size) {
-            i--;
-        }
-        return i;
-    }
-    
     private boolean isZero() {
-        for(int i = size - 1; i >= 0; i--) {
-            if(digits[i] != 0) {
-                return false;
-            }
-        }
-        return true;
+        return digits.length == 1 && digits[0] == 0;
     }
     
     public boolean equals(BigInt that) {
@@ -114,7 +85,7 @@ public class BigInt {
     }
     
     public boolean isEven() {
-        return (digits[size - 1] & 1) == 0;
+        return (digits[digits.length - 1] & 1) == 0;
     }
     
     public boolean gt(BigInt that) {
