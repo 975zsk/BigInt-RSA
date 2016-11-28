@@ -5,7 +5,6 @@
  */
 package bigint;
 
-import java.util.Random;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -108,9 +107,14 @@ public class BigIntTest {
     public void testIsEven() {
         BigInt instance = new BigInt();
         assertTrue(instance.isEven());
+        
         instance = new BigInt("1");
         assertFalse(instance.isEven());
+        
         instance = new BigInt("123154356841");
+        assertFalse(instance.isEven());
+        
+        instance = new BigInt("-123154356841");
         assertFalse(instance.isEven());
     }
 
@@ -136,8 +140,15 @@ public class BigIntTest {
         
         a = new BigInt("90345723904294274093482048907897782615276532482347588650870");
         b = new BigInt("90345723904294274093482048907897782615276532482347588650870");
-        
         assertTrue(a.equals(b));
+        
+        a = new BigInt("-90345723904294274093482048907897782615276532482347588650870");
+        b = new BigInt("-90345723904294274093482048907897782615276532482347588650870");
+        assertTrue(a.equals(b));
+        
+        a = new BigInt("-90345723904294274093482048907897782615276532482347588650870");
+        b = new BigInt("90345723904294274093482048907897782615276532482347588650870");
+        assertFalse(a.equals(b));
     }
     
     @Test
@@ -156,6 +167,18 @@ public class BigIntTest {
         
         a = new BigInt("567");
         b = new BigInt("567");
+        assertFalse(a.gt(b));
+        
+        a = new BigInt("-2344324");
+        b = new BigInt("999");
+        assertFalse(a.gt(b));
+        
+        a = new BigInt("-2344334");
+        b = new BigInt("-2344324");
+        assertFalse(a.gt(b));
+        
+        a = new BigInt("-2344324");
+        b = new BigInt("-2344324");
         assertFalse(a.gt(b));
     }
     
@@ -176,6 +199,14 @@ public class BigIntTest {
         a = new BigInt("567");
         b = new BigInt("567");
         assertFalse(a.lt(b));
+        
+        a = new BigInt("56788");
+        b = new BigInt("-56788");
+        assertFalse(a.lt(b));
+        
+        a = new BigInt("-567");
+        b = new BigInt();
+        assertTrue(a.lt(b));
     }
     
 }

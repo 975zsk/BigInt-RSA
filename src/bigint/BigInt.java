@@ -1,8 +1,17 @@
 package bigint;
 
+/**
+ * 
+ * @author Jakob Pupke
+ */
 public class BigInt {
     
     int[] digits;
+    /*
+    true is positive (default)
+    false is negative
+    */
+    boolean sign = true;
     BigIntOperations operations = new BigIntOperations();
     
     public static final int BASE = 10;
@@ -14,11 +23,17 @@ public class BigInt {
     
     public BigInt(BigInt that) {
         this.digits = that.digits;
+        this.sign = that.sign;
     }
     
     public BigInt(String num) {
         int length = num.length();
-        if(length == 0) {
+        if(length >= 1 && num.charAt(0) == '-') {
+            sign = false;
+            num = num.substring(1);
+            length = length - 1;
+        }
+        else if(length == 0) {
             num = "0";
             length = 1;
         }
@@ -58,9 +73,12 @@ public class BigInt {
     @Override
     public String toString() {
         String s = "";
+        if(isNeg()) s = s + "-";
+        
         for(int i = 0; i < digits.length; i++) {
             s = s + digits[i];
         }
+        
         return s;
     }
     
@@ -102,5 +120,13 @@ public class BigInt {
     
     public boolean lte(BigInt that) {
         return operations.lte(this, that);
+    }
+    
+    public boolean isNeg() {
+        return !sign;
+    }
+
+    boolean isPos() {
+        return sign;
     }
 }

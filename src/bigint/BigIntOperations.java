@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bigint;
 
 import static bigint.BigInt.BASE;
 
 /**
- *
- * @author jacke
+ * 
+ * @author Jakob Pupke
  */
 public class BigIntOperations {
     
@@ -95,9 +90,12 @@ public class BigIntOperations {
         BigInt c;
         BigInt[] products = new BigInt[x.digits.length];
         int prod, k;
-        int step = 0;
-        int over = 0;
+        int step = 0; int over = 0;
         for(int i = x.digits.length - 1; i >= 0; i--) {
+            /*
+            On each step make a new BigInt object and add it to
+            the products array
+            */
             c = new BigInt();
             c.initializeWithSize(y.digits.length + 1 + step);
             k = c.digits.length - 1 - step;
@@ -121,12 +119,12 @@ public class BigIntOperations {
         // Stream<BigInt> productsStream = Arrays.stream(products);
         // Optional<BigInt> res = productsStream.reduce(BigInt::add);
         
-        // works in Java 7
+        // works in Java 7/6
         return reduceByAddition(products).resize();
     }
     
     public boolean equals(BigInt x, BigInt y) {
-        if(x.digits.length != y.digits.length) {
+        if(x.sign != y.sign || x.digits.length != y.digits.length) {
             return false;
         }
         
@@ -141,22 +139,24 @@ public class BigIntOperations {
     
     // Returns true if x is greater than y
     public boolean gt(BigInt x, BigInt y) {
-        if(x.digits.length > y.digits.length) {
-            return true;
+        int xl = x.digits.length;
+        int yl = y.digits.length;
+        if(xl < yl) {
+            return x.isNeg() && y.isNeg();
         }
-        else if(x.digits.length < y.digits.length) {
-            return false;
+        else if(xl > yl) {
+            return x.isPos();
         }
-        else {
+        
+        if(x.isPos() != y.isPos()) return x.isPos();
             
-            for(int i = 0; i < x.digits.length; i++) {
-                if(x.digits[i] > y.digits[i]) {
-                    return true;
-                }
-            }
-            
-            return false;
+        for(int i = 0; i < xl; i++) {
+            if( (x.digits[i] > y.digits[i] && x.isPos()) || 
+                (x.digits[i] < y.digits[i] && x.isNeg())
+              ) { return true; }
         }
+
+        return false;
     }
     
     public boolean lt(BigInt x, BigInt y) {
