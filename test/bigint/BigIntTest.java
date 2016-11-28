@@ -5,6 +5,7 @@
  */
 package bigint;
 
+import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,6 +53,24 @@ public class BigIntTest {
         assertEquals("123", d.toString());
         
         assertEquals("3553759357973594", a.add(new BigInt("1")).toString());
+    }
+    
+    @Test
+    public void testAddNegs() {
+        BigInt a = new BigInt("-3553759357973593");
+        BigInt b = new BigInt("-903590835045676745");
+        String expResult = "-907144594403650338";
+        BigInt c = a.add(b);
+        assertEquals(expResult, c.toString());
+        
+        BigInt d = (new BigInt()).add(new BigInt("-1234"));
+        assertEquals("-1234", d.toString());
+        
+        assertEquals("-3553759357973592", a.add(new BigInt("1")).toString());
+        
+        assertEquals("0", a.add(new BigInt("3553759357973593")).toString());
+        
+        assertEquals("100", a.add(new BigInt("3553759357973693")).toString());
     }
     
     @Test

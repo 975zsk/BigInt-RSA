@@ -11,6 +11,32 @@ public class BigIntOperations {
     public BigIntOperations() {}
     
     public BigInt add(BigInt x, BigInt y) {
+        if(x.isNeg() && y.isNeg()) {
+            return add(x.neg(), y.neg()).neg();
+        }
+        else if(x.isNeg() && y.isPos()) {
+            BigInt absX = x.abs();
+            if(absX.gt(y)) {
+                return sub(x.neg(), y).neg();
+            }
+            else if(absX.lt(y)) {
+                return sub(y, x.neg());
+            }
+            return new BigInt(); // -100 + 100
+        }
+        else if(x.isPos() && y.isNeg()) {
+            BigInt absY = y.abs();
+            if(x.gt(absY)) {
+                return sub(x, y.neg());
+            }
+            else if(x.lt(absY)) {
+                return sub(y.neg(), x).neg();
+            }
+            return new BigInt(); // 100 + -100
+        }
+        
+        // OK both BigInts are positive -> Normal addition
+        
         BigInt c = new BigInt();
         c.initializeWithSize(Math.max(x.digits.length, y.digits.length) + 1);
         int xIdx = x.digits.length - 1;

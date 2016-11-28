@@ -129,4 +129,23 @@ public class BigInt {
     boolean isPos() {
         return sign;
     }
+    
+    /*
+     * Returns a new BigInt that is negated
+     */
+    public BigInt neg() {
+        return new BigInt(this).setSign(!sign);
+    }
+    
+    public BigInt setSign(boolean sign) {
+        this.sign = sign;
+        return this;
+    }
+    
+    /*
+    Returns a new positive BigInt.
+    */
+    public BigInt abs() {
+        return new BigInt(this).setSign(true);
+    }
 }
