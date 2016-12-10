@@ -42,6 +42,26 @@ public class BigIntTest {
     }
     
     @Test
+    public void testExtendWithZeros() {
+        BigInt x = new BigInt("1234");
+        x.extendWithZeros(10);
+        assertEquals("0000001234", x.toString());
+    }
+    
+    @Test
+    public void testKaratsuba() {
+        BigInt x = new BigInt("1234");
+        BigInt y = new BigInt("4321");
+        BigInt c = x.karatsuba(y);
+        assertEquals("5332114", c.toString());
+        
+        x = new BigInt("88888888");
+        y = new BigInt("88888888");
+        c = x.karatsuba(y);
+        assertEquals("7901234409876544", c.toString());
+    }
+    
+    @Test
     public void testAdd() {
         BigInt a = new BigInt("3553759357973593");
         BigInt b = new BigInt("903590835045676745");
@@ -102,6 +122,14 @@ public class BigIntTest {
         
         assertEquals("0", a.mul(new BigInt("21313435334564566353")).toString());
         
+        a = new BigInt("99");
+        b = new BigInt("32");
+        assertEquals("3168", a.mul(b).toString());
+        
+        a = new BigInt("123456");
+        b = new BigInt("1000000");
+        
+        assertEquals("123456000000", a.mul(b).toString());
     }
 
     @Test
@@ -176,6 +204,29 @@ public class BigIntTest {
         a = new BigInt("567");
         b = new BigInt("567");
         assertFalse(a.lt(b));
+    }
+    
+    
+    @Test
+    public void testResize() {
+        int[] a = new int[5];
+        a[0] = 0;
+        a[1] = 0;
+        a[2] = 1;
+        a[3] = 2;
+        a[4] = 3;
+        BigInt x = new BigInt(a);
+        assertEquals("123", x.resize().toString());
+    }
+    
+    @Test
+    public void testShiftLeftBy() {
+        BigInt a = new BigInt("567");
+        BigInt b = a.shiftLeftBy(4);
+        assertEquals("5670000", b.toString());
+        BigInt c = new BigInt("567");
+        BigInt d = c.power(3);
+        assertTrue(b.equals(d));
     }
     
 }

@@ -1,5 +1,7 @@
 package bigint;
 
+import java.util.Arrays;
+
 public class BigInt {
     
     int[] digits;
@@ -11,6 +13,27 @@ public class BigInt {
         digits = new int[1];
         digits[0] = 0;
     }
+    
+    public BigInt(int integer) {
+        String[] stringDigits = Integer.toString(integer).split("");
+        digits = new int[stringDigits.length];
+        for(int i = 0; i < digits.length; i++) {
+            digits[i] = Integer.parseInt(stringDigits[i]);
+        }
+    }
+    
+    public BigInt shiftLeftBy(int f) {
+        int newSize = digits.length + f;
+        int[] newDigits = new int[newSize];
+        System.arraycopy(digits, 0, newDigits, 0, digits.length);
+        digits = newDigits;
+        return this;
+    }
+    
+    public BigInt(int[] digits) {
+        this.digits = digits;
+    }
+   
     
     public BigInt(BigInt that) {
         this.digits = that.digits;
@@ -51,6 +74,16 @@ public class BigInt {
         return this;
     }
     
+    public void extendWithZeros(int targetSize) {
+        if(targetSize <= digits.length) {
+            return;
+        }
+        int[] newDigits = new int[targetSize];
+        int idx = newDigits.length - digits.length;
+        System.arraycopy(digits, 0, newDigits, idx, digits.length);
+        digits = newDigits;
+    }
+    
     public void initializeWithSize(int size) {
         digits = new int[size];
     }
@@ -64,12 +97,24 @@ public class BigInt {
         return s;
     }
     
-    private boolean isZero() {
+    public boolean isZero() {
         return digits.length == 1 && digits[0] == 0;
     }
     
     public boolean equals(BigInt that) {
         return operations.equals(this, that);
+    }
+    
+    public BigInt power(int e) {
+        BigInt start = new BigInt("1");
+        for(int i = 0; i < e; i++) {
+            start = start.mul(this);
+        }
+        return start;
+    }
+    
+    public BigInt karatsuba(BigInt that) {
+        return operations.karatsuba(this, that);
     }
     
     public BigInt add(BigInt that) {
