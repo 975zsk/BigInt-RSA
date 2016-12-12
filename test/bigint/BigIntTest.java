@@ -41,6 +41,31 @@ public class BigIntTest {
     }
     
     @Test
+    public void testExtendWithZeros() {
+        BigInt x = new BigInt("1234");
+        x.extendWithZeros(10);
+        assertEquals("0000001234", x.toString());
+    }
+    
+    @Test
+    public void testKaratsuba() {
+        BigInt x = new BigInt("1234");
+        BigInt y = new BigInt("4321");
+        BigInt c = x.karatsuba(y);
+        assertEquals("5332114", c.toString());
+        
+        x = new BigInt("88888888");
+        y = new BigInt("88888888");
+        c = x.karatsuba(y);
+        assertEquals("7901234409876544", c.toString());
+        
+        x = new BigInt("88888888");
+        y = new BigInt("4444");
+        c = x.karatsuba(y);
+        assertEquals("395022218272", c.toString());
+    }
+    
+    @Test
     public void testAdd() {
         BigInt a = new BigInt("3553759357973593");
         BigInt b = new BigInt("903590835045676745");
@@ -96,6 +121,21 @@ public class BigIntTest {
         expResult = "1468";
         c = a.sub(b);
         assertEquals(expResult, c.toString());
+        
+        a = new BigInt("100");
+        b = new BigInt("257");
+        c = a.sub(b);
+        assertEquals("-157", c.toString());
+        
+        a = new BigInt("-65874");
+        b = new BigInt("-9878845");
+        c = a.sub(b);
+        assertEquals("9812971", c.toString());
+        
+        a = new BigInt("10000");
+        b = new BigInt("49");
+        c = a.sub(b);
+        assertEquals("9951", c.toString());
     }
     
     @Test
@@ -119,6 +159,14 @@ public class BigIntTest {
         
         assertEquals("0", a.mul(new BigInt("21313435334564566353")).toString());
         
+        a = new BigInt("99");
+        b = new BigInt("32");
+        assertEquals("3168", a.mul(b).toString());
+        
+        a = new BigInt("123456");
+        b = new BigInt("1000000");
+        
+        assertEquals("123456000000", a.mul(b).toString());
     }
 
     @Test
@@ -225,6 +273,26 @@ public class BigIntTest {
         a = new BigInt("-567");
         b = new BigInt();
         assertTrue(a.lt(b));
+    }
+    
+    
+    @Test
+    public void testResize() {
+        int[] a = new int[5];
+        a[0] = 0;
+        a[1] = 0;
+        a[2] = 1;
+        a[3] = 2;
+        a[4] = 3;
+        BigInt x = new BigInt(a);
+        assertEquals("123", x.resize().toString());
+    }
+    
+    @Test
+    public void testShiftLeftBy() {
+        BigInt a = new BigInt("567");
+        BigInt b = a.shiftLeftBy(4);
+        assertEquals("5670000", b.toString());
     }
     
 }

@@ -8,28 +8,30 @@ import static bigint.BigInt.BASE;
  */
 public class BigIntOperations {
     
+    private final int KARATSUBA_LIMIT = 2;
+    
     public BigIntOperations() {}
     
     public BigInt add(BigInt x, BigInt y) {
         if(x.isNeg() && y.isNeg()) {
             return add(x.neg(), y.neg()).neg();
         }
-        else if(x.isNeg() && y.isPos()) {
+        if(x.isNeg() && y.isPos()) {
             BigInt absX = x.abs();
             if(absX.gt(y)) {
                 return sub(x.neg(), y).neg();
             }
-            else if(absX.lt(y)) {
+            if(absX.lt(y)) {
                 return sub(y, x.neg());
             }
             return new BigInt(); // -100 + 100
         }
-        else if(x.isPos() && y.isNeg()) {
+        if(x.isPos() && y.isNeg()) {
             BigInt absY = y.abs();
             if(x.gt(absY)) {
                 return sub(x, y.neg());
             }
-            else if(x.lt(absY)) {
+            if(x.lt(absY)) {
                 return sub(y.neg(), x).neg();
             }
             return new BigInt(); // 100 + -100
@@ -72,6 +74,22 @@ public class BigIntOperations {
     }
     
     public BigInt sub(BigInt x, BigInt y) {
+        if(x.isNeg() && y.isNeg()) {
+            return add(x, y.neg());
+        }
+        if(x.isNeg() && y.isPos()) {
+            return add(x.neg(), y).neg();
+        }
+        if(x.isPos() && y.isNeg()) {
+            return add(x, y.neg());
+        }
+        
+        // both positive
+        
+        if(x.lt(y)) {
+            return sub(y, x).neg();
+        }
+        
         BigInt c = new BigInt();
         c.initializeWithSize(Math.max(x.digits.length, y.digits.length) + 1);
         
@@ -82,6 +100,7 @@ public class BigIntOperations {
         int diff;
         int minuend;
         int subtrahend;
+        int carry = 0;
         
         while(cIdx > 0) {
             if(xIdx < 0) {
@@ -96,12 +115,11 @@ public class BigIntOperations {
             else {
                 subtrahend = y.digits[yIdx];
             }
-            diff = minuend - subtrahend;
+            diff = minuend - subtrahend - carry;
+            carry = 0;
             if(diff < 0) {
-                if(xIdx > 0 && x.digits[xIdx - 1] > 0) {
-                    x.digits[xIdx - 1]--;
-                    diff += BASE;
-                }
+                carry = 1;
+                diff += BASE;
             }
             c.digits[cIdx] = diff;
             xIdx--;
@@ -113,6 +131,9 @@ public class BigIntOperations {
     }
     
     public BigInt mul(BigInt x , BigInt y) {
+        if(x.sign != y.sign) {
+            return mul(x, y).neg();
+        }
         BigInt c;
         BigInt[] products = new BigInt[x.digits.length];
         int prod, k;
@@ -126,7 +147,7 @@ public class BigIntOperations {
             c.initializeWithSize(y.digits.length + 1 + step);
             k = c.digits.length - 1 - step;
             
-            for(int j = 0; j < y.digits.length; j++) {
+            for(int j = y.digits.length - 1; j >= 0; j--) {
                 prod = x.digits[i] * y.digits[j] + over;
                 c.digits[k] = prod % BASE;
                 over = prod / BASE;
@@ -147,6 +168,66 @@ public class BigIntOperations {
         
         // works in Java 7/6
         return reduceByAddition(products).resize();
+    }
+    
+    public DivisionResult div(BigInt x, BigInt y) {
+        if(y.isZero()) {
+            throw new IllegalArgumentException("Division by zero is not allowed");
+        }
+        if(y.gt(x)) {
+            return new DivisionResult(new BigInt(), x);
+        }
+        if(y.equals(x)) {
+            return new DivisionResult(new BigInt("1"), new BigInt());
+        }
+        
+        return new DivisionResult();
+    }
+    
+    public BigInt karatsuba(BigInt x, BigInt y) {
+        int size = Math.max(x.digits.length, y.digits.length);
+        if(size <= KARATSUBA_LIMIT) {
+            return mul(x, y);
+        }
+        
+        int half = size / 2;
+        int baseExponent = size - half;
+        
+        x.extendWithZeros(size);
+        y.extendWithZeros(size);
+        
+        BigInt[] parts = getParts(x, y);
+        
+        BigInt xH = parts[0]; // xHigh
+        BigInt xL = parts[1]; // xLow
+        BigInt yH = parts[2]; // yHigh
+        BigInt yL = parts[3]; // yLow
+        
+        BigInt k = xH.add(xL);
+        BigInt l = yH.add(yL);
+        
+        BigInt a = karatsuba(xH, yH);
+        BigInt d = karatsuba(xL, yL);
+        BigInt e1 = karatsuba(k, l);
+        BigInt e2 = e1.sub(a);
+        BigInt e = e2.sub(d);
+        
+        System.out.println("e1: " + e1);
+        System.out.println("e2: " + e2);
+        System.out.println("k: " + k);
+        System.out.println("l: " + l);
+        System.out.println("a: " + a);
+        System.out.println("d: " + d);
+        System.out.println("e: " + e);
+        System.out.println("----------");
+        
+        boolean g = a.isNeg() || d.isNeg() || e.isNeg();
+        
+        BigInt res1 = a.shiftLeftBy(2*baseExponent);
+        BigInt res2 = e.shiftLeftBy(baseExponent);
+        
+        return res1.add(res2).add(d);
+        
     }
     
     public boolean equals(BigInt x, BigInt y) {
@@ -208,6 +289,43 @@ public class BigIntOperations {
             x = x.add(bigInts[i]);
         }
         return x;
+    }
+
+    private BigInt[] getParts(BigInt x, BigInt y) {
+        int j = 0;
+        
+        int size = x.digits.length;
+        int halfL = size / 2;
+        int halfR = size - halfL;
+        
+        int[] xH = new int[halfL];
+        int[] xL = new int[halfR];
+        int[] yH = new int[halfL];
+        int[] yL = new int[halfR];
+        
+        int k = halfR - 1;
+        int l = halfL - 1;
+        for(int i = size - 1; i >= 0; i--) {
+            if(i >= halfL) {
+                xL[k] = x.digits[i];
+                yL[k] = y.digits[i];
+                k--;
+            }
+            else {
+                xH[l] = x.digits[i];
+                yH[l] = y.digits[i];
+                l--;
+            }
+        }
+        
+        BigInt[] res = new BigInt[4];
+        
+        res[0] = new BigInt(xH);
+        res[1] = new BigInt(xL);
+        res[2] = new BigInt(yH);
+        res[3] = new BigInt(yL);
+        
+        return res;
     }
     
 }
