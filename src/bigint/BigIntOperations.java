@@ -44,7 +44,7 @@ public class BigIntOperations {
         int xIdx = x.digits.length - 1;
         int yIdx = y.digits.length - 1;
         int cIdx = c.digits.length - 1;
-        int over = 0;
+        int carry = 0;
         int xSummand;
         int ySummand;
         int sum;
@@ -62,8 +62,8 @@ public class BigIntOperations {
             else {
                 ySummand = y.digits[yIdx];
             }
-            sum = xSummand + ySummand + over;
-            over = sum / BASE;
+            sum = xSummand + ySummand + carry;
+            carry = sum / BASE;
             c.digits[cIdx] = sum % BASE;
             xIdx--;
             yIdx--;
@@ -137,7 +137,7 @@ public class BigIntOperations {
         BigInt c;
         BigInt[] products = new BigInt[x.digits.length];
         int prod, k;
-        int step = 0; int over = 0;
+        int step = 0; int carry = 0;
         for(int i = x.digits.length - 1; i >= 0; i--) {
             /*
             On each step make a new BigInt object and add it to
@@ -148,15 +148,15 @@ public class BigIntOperations {
             k = c.digits.length - 1 - step;
             
             for(int j = y.digits.length - 1; j >= 0; j--) {
-                prod = x.digits[i] * y.digits[j] + over;
+                prod = x.digits[i] * y.digits[j] + carry;
                 c.digits[k] = prod % BASE;
-                over = prod / BASE;
+                carry = prod / BASE;
                 k--;
             }
             
-            if(over != 0) {
-                c.digits[0] = over;
-                over = 0;
+            if(carry != 0) {
+                c.digits[0] = carry;
+                carry = 0;
             }
             
             step++;
