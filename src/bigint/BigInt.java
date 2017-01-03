@@ -27,21 +27,23 @@ public class BigInt {
         for(int i = 0; i < digits.length; i++) {
             digits[i] = Integer.parseInt(stringDigits[i]);
         }
+        sign = integer >= 0;
     }
     
-    public BigInt shiftLeftBy(int f) {
-        int newSize = digits.length + f;
-        int[] newDigits = new int[newSize];
-        System.arraycopy(digits, 0, newDigits, 0, digits.length);
-        digits = newDigits;
-        return this;
+    public BigInt(long integer) {
+        String[] stringDigits = Long.toString(integer).split("");
+        digits = new int[stringDigits.length];
+        for(int i = 0; i < digits.length; i++) {
+            digits[i] = Integer.parseInt(stringDigits[i]);
+        }
+        sign = integer >= 0;
     }
     
     public BigInt(int[] digits) {
         this.digits = digits;
     }
    
-    
+    // Return a copy of that
     public BigInt(BigInt that) {
         this.digits = that.digits;
         this.sign = that.sign;
@@ -66,6 +68,14 @@ public class BigInt {
             digits[j] = val;
             j--;
         }
+    }
+    
+    public BigInt shiftLeftBy(int f) {
+        int newSize = digits.length + f;
+        int[] newDigits = new int[newSize];
+        System.arraycopy(digits, 0, newDigits, 0, digits.length);
+        digits = newDigits;
+        return this;
     }
     
     public BigInt resize() {
@@ -121,13 +131,9 @@ public class BigInt {
         return operations.equals(this, that);
     }
     
-    public BigInt power(int e) {
-        BigInt start = new BigInt("1");
-        for(int i = 0; i < e; i++) {
-            start = start.mul(this);
-        }
-        return start;
-    }
+    public BigInt pow(int e) {
+        return operations.pow(this, e);
+    } 
     
     public BigInt karatsuba(BigInt that) {
         return operations.karatsuba(this, that);

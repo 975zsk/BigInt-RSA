@@ -1,6 +1,7 @@
 package bigint;
 
 import static bigint.BigInt.BASE;
+import java.util.Arrays;
 
 /**
  * 
@@ -184,6 +185,7 @@ public class BigIntOperations {
         return new DivisionResult();
     }
     
+    // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
     public BigInt karatsuba(BigInt x, BigInt y) {
         int size = Math.max(x.digits.length, y.digits.length);
         if(size <= KARATSUBA_LIMIT) {
@@ -212,23 +214,32 @@ public class BigIntOperations {
         BigInt e2 = e1.sub(a);
         BigInt e = e2.sub(d);
         
-        System.out.println("e1: " + e1);
-        System.out.println("e2: " + e2);
-        System.out.println("k: " + k);
-        System.out.println("l: " + l);
-        System.out.println("a: " + a);
-        System.out.println("d: " + d);
-        System.out.println("e: " + e);
-        System.out.println("----------");
-        
         boolean g = a.isNeg() || d.isNeg() || e.isNeg();
         
         BigInt res1 = a.shiftLeftBy(2*baseExponent);
         BigInt res2 = e.shiftLeftBy(baseExponent);
         
-        return res1.add(res2).add(d);
-        
+        return res1.add(res2).add(d);   
     }
+    
+    public BigInt pow(BigInt x, int k) {
+        if(k == 1) {
+            return x;
+        }
+        BigInt res = new BigInt(1);
+        if(k == 0) {
+            return res;
+        }
+        String bits = Integer.toBinaryString(k);
+        for(int i = 0; i < bits.length(); i++) {
+            System.out.println(bits.charAt(i));
+            res = res.mul(res);
+            if(bits.charAt(i) == '1') {
+                res = res.mul(x);
+            }
+        }
+        return res;
+    }    
     
     public boolean equals(BigInt x, BigInt y) {
         if(x.sign != y.sign || x.digits.length != y.digits.length) {

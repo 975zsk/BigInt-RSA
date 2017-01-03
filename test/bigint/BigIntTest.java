@@ -295,4 +295,27 @@ public class BigIntTest {
         assertEquals("5670000", b.toString());
     }
     
+    @Test
+    public void testPow() {
+        BigInt a = new BigInt(8);
+        BigInt b = a.pow(23);
+        assertEquals("590295810358705651712", b.toString());
+        
+        a = new BigInt(55);
+        b = a.pow(0);
+        assertEquals("1", b.toString());
+        
+        a = new BigInt(587867645);
+        b = a.pow(1);
+        assertEquals("587867645", b.toString());
+        
+        a = new BigInt(58786764543534L);
+        b = a.pow(1);
+        assertEquals("58786764543534", b.toString());
+        
+        a = new BigInt(52);
+        b = a.pow(98);
+        assertEquals("1473423784866237624670098483797258933673033687275246807716133162119807965143050991653453567510224775014037060129581571439829382568929663552438113089945991643900772614144", b.toString());
+    }
+    
 }
