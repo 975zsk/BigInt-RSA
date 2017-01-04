@@ -22,4 +22,9 @@ public class DivisionResult {
         this.quotient = quotient;
         this.rest = rest;
     }
+
+    DivisionResult neg() {
+        quotient.sign = !quotient.sign;
+        return this;
+    }
 }

@@ -133,7 +133,11 @@ public class BigInt {
     
     public BigInt pow(int e) {
         return operations.pow(this, e);
-    } 
+    }
+    
+    public BigInt mod(BigInt m) {
+        return operations.mod(this, m);
+    }
     
     public BigInt karatsuba(BigInt that) {
         return operations.karatsuba(this, that);
@@ -149,6 +153,10 @@ public class BigInt {
     
     public BigInt mul(BigInt that) {
         return operations.mul(this, that);
+    }
+    
+    public DivisionResult div(BigInt that) {
+        return operations.div(this, that);
     }
     
     public boolean isEven() {
