@@ -306,6 +306,27 @@ public class BigIntOperations {
         return x.div(m).rest;
     }
     
+    public BigInt powMod(BigInt x, int e, BigInt m) {
+        if(e < 0) {
+            throw new IllegalArgumentException("Negative exponents are not supported");
+        }
+        if(e == 1) {
+            return x;
+        }
+        BigInt res = new BigInt(1);
+        if(e == 0) {
+            return res;
+        }
+        String bits = Integer.toBinaryString(e);
+        for(int i = 0; i < bits.length(); i++) {
+            res = res.mul(res).div(m).rest;
+            if(bits.charAt(i) == '1') {
+                res = res.mul(x).div(m).rest;
+            }
+        }
+        return res;
+    }
+    
     public boolean equals(BigInt x, BigInt y) {
         if(x.sign != y.sign || x.digits.length != y.digits.length) {
             return false;

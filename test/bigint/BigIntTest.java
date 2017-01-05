@@ -375,6 +375,19 @@ public class BigIntTest {
     }
     
     @Test
+    public void testPowMod() {
+        BigInt a = new BigInt(2);
+        int e = 588;
+        BigInt m = new BigInt(57687);
+        assertEquals("25348", a.powMod(e, m).toString());
+        
+        a = new BigInt(38848);
+        e = 49838;
+        m = new BigInt(8456765);
+        assertEquals("4018389", a.powMod(e, m).toString());
+    }
+    
+    @Test
     public void testDiv() {
         BigInt a = new BigInt(28382);
         BigInt b = new BigInt(23);

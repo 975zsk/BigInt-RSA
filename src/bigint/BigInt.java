@@ -139,6 +139,10 @@ public class BigInt {
         return operations.mod(this, m);
     }
     
+    public BigInt powMod(int e, BigInt m) {
+        return operations.powMod(this, e, m);
+    }
+    
     public BigInt karatsuba(BigInt that) {
         return operations.karatsuba(this, that);
     }
