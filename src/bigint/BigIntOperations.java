@@ -1,6 +1,7 @@
 package bigint;
 
 import static bigint.BigInt.BASE;
+import static bigint.BigInt.ZERO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,28 +17,28 @@ public class BigIntOperations {
     public BigIntOperations() {}
     
     public BigInt add(BigInt x, BigInt y) {
-        if(x.isNeg() && y.isNeg()) {
+        if (x.isNeg() && y.isNeg()) {
             return add(x.neg(), y.neg()).neg();
         }
-        if(x.isNeg() && y.isPos()) {
+        if (x.isNeg() && y.isPos()) {
             BigInt absX = x.abs();
-            if(absX.gt(y)) {
+            if (absX.gt(y)) {
                 return sub(x.neg(), y).neg();
             }
-            if(absX.lt(y)) {
+            if (absX.lt(y)) {
                 return sub(y, x.neg());
             }
-            return new BigInt(); // -100 + 100
+            return ZERO; // -100 + 100
         }
-        if(x.isPos() && y.isNeg()) {
+        if (x.isPos() && y.isNeg()) {
             BigInt absY = y.abs();
-            if(x.gt(absY)) {
+            if (x.gt(absY)) {
                 return sub(x, y.neg());
             }
-            if(x.lt(absY)) {
+            if (x.lt(absY)) {
                 return sub(y.neg(), x).neg();
             }
-            return new BigInt(); // 100 + -100
+            return ZERO; // 100 + -100
         }
         
         // OK both BigInts are positive -> Normal addition
@@ -53,13 +54,13 @@ public class BigIntOperations {
         int sum;
         
         while(cIdx >= 0) {
-            if(xIdx < 0) {
+            if (xIdx < 0) {
                 xSummand = 0;
             }
             else {
                 xSummand = x.digits[xIdx];
             }
-            if(yIdx < 0) {
+            if (yIdx < 0) {
                 ySummand = 0;
             }
             else {
@@ -77,19 +78,19 @@ public class BigIntOperations {
     }
     
     public BigInt sub(BigInt x, BigInt y) {
-        if(x.isNeg() && y.isNeg()) {
+        if (x.isNeg() && y.isNeg()) {
             return add(x, y.neg());
         }
-        if(x.isNeg() && y.isPos()) {
+        if (x.isNeg() && y.isPos()) {
             return add(x.neg(), y).neg();
         }
-        if(x.isPos() && y.isNeg()) {
+        if (x.isPos() && y.isNeg()) {
             return add(x, y.neg());
         }
         
         // both positive
         
-        if(x.lt(y)) {
+        if (x.lt(y)) {
             return sub(y, x).neg();
         }
         
@@ -106,13 +107,13 @@ public class BigIntOperations {
         int carry = 0;
         
         while(cIdx > 0) {
-            if(xIdx < 0) {
+            if (xIdx < 0) {
                 minuend = 0;
             }
             else {
                 minuend = x.digits[xIdx];
             }
-            if(yIdx < 0) {
+            if (yIdx < 0) {
                 subtrahend = 0;
             }
             else {
@@ -120,7 +121,7 @@ public class BigIntOperations {
             }
             diff = minuend - subtrahend - carry;
             carry = 0;
-            if(diff < 0) {
+            if (diff < 0) {
                 carry = 1;
                 diff += BASE;
             }
@@ -134,8 +135,8 @@ public class BigIntOperations {
     }
     
     public BigInt mul(BigInt x , BigInt y) {
-        if(x.sign != y.sign) {
-            return mul(x, y).neg();
+        if (x.sign != y.sign) {
+            return mul(x.setSign(true), y.setSign(true)).neg();
         }
         BigInt c;
         /* store intermediary results in this array.
@@ -159,7 +160,7 @@ public class BigIntOperations {
                 k--;
             }
             
-            if(carry != 0) {
+            if (carry != 0) {
                 c.digits[0] = carry;
                 carry = 0;
             }
@@ -180,27 +181,25 @@ public class BigIntOperations {
     }
     
     private DivisionResult div(BigInt x, BigInt y, int factor) {
-        if(y.isZero()) {
+        if (y.isZero()) {
             throw new IllegalArgumentException("Division by zero is not allowed");
         }
         
-        if(x.sign != y.sign) {
-            x.sign = true;
-            y.sign = true;
-            return div(x, y, factor).neg();
+        if (x.sign != y.sign) {
+            return div(x.setSign(true), y.setSign(true), factor).neg();
         }
         
-        if(y.gt(x)) {
-            return new DivisionResult(new BigInt(), x);
+        if (y.gt(x)) {
+            return new DivisionResult(ZERO, x);
         }
-        if(y.equals(x)) {
-            return new DivisionResult(new BigInt(1), new BigInt());
+        if (y.equals(x)) {
+            return new DivisionResult(new BigInt(1), ZERO);
         }
-        if(y.equals(new BigInt(1))) {
-            return new DivisionResult(x, new BigInt());
+        if (y.equals(new BigInt(1))) {
+            return new DivisionResult(x, ZERO);
         }
         
-        if(y.digits[0] < BASE / 2) {
+        if (y.digits[0] < BASE / 2) {
             // So the Schätzfunktion (guess function!?) will work
             factor = BASE / (y.digits[0] + 1);
             BigInt d = new BigInt(factor);
@@ -216,7 +215,7 @@ public class BigIntOperations {
         
         while(indexR < x.digits.length) {
             dividend = new BigInt(digits);
-            if(dividend.lt(y)) {
+            if (dividend.lt(y)) {
                 dividend.shiftLeftBy(1);
                 dividend.digits[dividend.digits.length - 1] = x.digits[indexR];
                 indexR++;
@@ -236,7 +235,7 @@ public class BigIntOperations {
         
         BigInt res = new BigInt(ds);
         
-        if(factor != 1) {
+        if (factor != 1) {
             /* dividend and divisor were multiplied by a factor,
                thus the rest needs to be divided by this factor */
             rest = rest.div(new BigInt(factor)).quotient;
@@ -247,7 +246,7 @@ public class BigIntOperations {
     // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
     public BigInt karatsuba(BigInt x, BigInt y) {
         int size = Math.max(x.digits.length, y.digits.length);
-        if(size <= KARATSUBA_LIMIT) {
+        if (size <= KARATSUBA_LIMIT) {
             return mul(x, y);
         }
         
@@ -282,20 +281,17 @@ public class BigIntOperations {
     }
     
     public BigInt pow(BigInt x, int e) {
-        if(e < 0) {
-            throw new IllegalArgumentException("Negative exponents are not supported");
-        }
-        if(e == 1) {
-            return x;
-        }
+        if (e < 0) { throw new IllegalArgumentException("Negative exponents are not supported"); }
+        if (e == 1) { return x; }
+        
         BigInt res = new BigInt(1);
-        if(e == 0) {
+        if (e == 0) {
             return res;
         }
         String bits = Integer.toBinaryString(e);
         for(int i = 0; i < bits.length(); i++) {
             res = res.mul(res);
-            if(bits.charAt(i) == '1') {
+            if (bits.charAt(i) == '1') {
                 res = res.mul(x);
             }
         }
@@ -307,33 +303,92 @@ public class BigIntOperations {
     }
     
     public BigInt powMod(BigInt x, int e, BigInt m) {
-        if(e < 0) {
-            throw new IllegalArgumentException("Negative exponents are not supported");
-        }
-        if(e == 1) {
-            return x;
-        }
+        if (e < 0) { throw new IllegalArgumentException("Negative exponents are not supported"); }
+        if (m.lte(ZERO)) { throw new IllegalArgumentException("The modul must be positive"); }
+        if (e == 1) { return x; }
+        
         BigInt res = new BigInt(1);
-        if(e == 0) {
+        if (e == 0) {
             return res;
         }
         String bits = Integer.toBinaryString(e);
         for(int i = 0; i < bits.length(); i++) {
             res = res.mul(res).div(m).rest;
-            if(bits.charAt(i) == '1') {
+            if (bits.charAt(i) == '1') {
                 res = res.mul(x).div(m).rest;
             }
         }
         return res;
     }
     
+    public BigInt gcd(BigInt x, BigInt y) {
+        if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
+        if (x.isZero()) { return y; }
+        if (y.isZero()) { return x; }
+        if (x.isNeg()) { x.sign = true; }
+        if (y.isNeg()) { y.sign = true; }
+        
+        // What is a good limit here??
+        if(Math.abs(x.digits.length - y.digits.length) > 5) {
+            if(x.lt(y)) {
+                Helper.exchange(x, y);
+            }
+            x = x.mod(y);
+            //return gcd(x.mod(y), y);
+        }
+        
+        while(y.gt(ZERO)) {
+            if (y.lt(x)) {
+                Helper.exchange(x, y);
+            }
+            y = y.sub(x);
+        }
+        
+        return x;
+    }
+    
+    public GcdLinComb egcd(BigInt a, BigInt b) {
+//        if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
+//        if (x.isZero()) { return y; }
+//        if (y.isZero()) { return x; }
+//        if (x.isNeg()) { x = x.neg(); }
+//        if (y.isNeg()) { y = y.neg(); }
+        
+//        if(Math.abs(x.digits.length - y.digits.length) > 10) {
+//            if(x.lt(y)) {
+//                Helper.exchange(x, y);
+//                return gcd(x.mod(y), y);
+//            }
+//        }
+
+        
+
+        BigInt u = new BigInt(1); BigInt v = new BigInt(0);
+        BigInt s = new BigInt(0); BigInt t = new BigInt(1);
+        
+        while(!b.equals(ZERO)) {
+            if(a.gt(b)) {
+                a = a.sub(b);
+                u = u.sub(s);
+                v = v.sub(t);
+            }
+            else {
+                b = b.sub(a);
+                s = s.sub(u);
+                t = t.sub(v);
+            }
+        }
+        
+        return new GcdLinComb(a, u, v);
+    }
+    
     public boolean equals(BigInt x, BigInt y) {
-        if(x.sign != y.sign || x.digits.length != y.digits.length) {
+        if (x.sign != y.sign || x.digits.length != y.digits.length) {
             return false;
         }
         
         for(int i = 0; i < x.digits.length; i++) {
-            if(x.digits[i] != y.digits[i]) {
+            if (x.digits[i] != y.digits[i]) {
                 return false;
             }
         }
@@ -345,17 +400,17 @@ public class BigIntOperations {
     public boolean gt(BigInt x, BigInt y) {
         int xl = x.digits.length;
         int yl = y.digits.length;
-        if(xl < yl) {
+        if (xl < yl) {
             return x.isNeg() && y.isNeg();
         }
-        else if(xl > yl) {
+        else if (xl > yl) {
             return x.isPos();
         }
         
-        if(x.isPos() != y.isPos()) return x.isPos();
+        if (x.isPos() != y.isPos()) return x.isPos();
             
         for(int i = 0; i < xl; i++) {
-            if(x.digits[i] == y.digits[i]) {
+            if (x.digits[i] == y.digits[i]) {
                 continue;
             }
             return (x.digits[i] > y.digits[i] && x.isPos()) ||

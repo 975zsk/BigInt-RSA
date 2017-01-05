@@ -15,6 +15,7 @@ public class BigInt {
     BigIntOperations operations = new BigIntOperations();
     
     public static final int BASE = 10;
+    public static BigInt ZERO = new BigInt();
     
     public BigInt() {
         digits = new int[1];
@@ -51,12 +52,12 @@ public class BigInt {
     
     public BigInt(String num) {
         int length = num.length();
-        if(length >= 1 && num.charAt(0) == '-') {
+        if (length >= 1 && num.charAt(0) == '-') {
             sign = false;
             num = num.substring(1);
             length = length - 1;
         }
-        else if(length == 0) {
+        else if (length == 0) {
             num = "0";
             length = 1;
         }
@@ -79,12 +80,12 @@ public class BigInt {
     }
     
     public BigInt resize() {
-        if(isZero()) {
+        if (isZero()) {
             return this;
         }
         int idx = 0;
         for(int i = 0; i < digits.length; i++) {
-            if(digits[i] != 0) {
+            if (digits[i] != 0) {
                 idx = i;
                 break;
             }
@@ -98,7 +99,7 @@ public class BigInt {
     }
     
     public void extendWithZeros(int targetSize) {
-        if(targetSize <= digits.length) {
+        if (targetSize <= digits.length) {
             return;
         }
         int[] newDigits = new int[targetSize];
@@ -114,7 +115,7 @@ public class BigInt {
     @Override
     public String toString() {
         String s = "";
-        if(isNeg()) s = s + "-";
+        if (isNeg()) s = s + "-";
         
         for(int i = 0; i < digits.length; i++) {
             s = s + digits[i];
@@ -161,6 +162,14 @@ public class BigInt {
     
     public DivisionResult div(BigInt that) {
         return operations.div(this, that);
+    }
+    
+    public BigInt gcd(BigInt that) {
+        return operations.gcd(this, that);
+    }
+    
+    public GcdLinComb egcd(BigInt that) {
+        return operations.egcd(this, that);
     }
     
     public boolean isEven() {

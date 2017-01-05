@@ -1,6 +1,7 @@
 package bigint;
 
 import static bigint.BigInt.BASE;
+import static bigint.BigInt.ZERO;
 
 /**
  *
@@ -16,7 +17,7 @@ public class Helper {
     public static int guess(BigInt dividend, BigInt divisor) {
         int intDividend;
         int intDivisor = divisor.digits[0];
-        if(dividend.digits.length == divisor.digits.length) {
+        if (dividend.digits.length == divisor.digits.length) {
             intDividend = dividend.digits[0];
         }
         else {
@@ -47,7 +48,7 @@ public class Helper {
         int k = halfR - 1;
         int l = halfL - 1;
         for(int i = size - 1; i >= 0; i--) {
-            if(i >= halfL) {
+            if (i >= halfL) {
                 xL[k] = x.digits[i];
                 yL[k] = y.digits[i];
                 k--;
@@ -70,15 +71,24 @@ public class Helper {
     }
     
     public static BigInt reduceByAddition(BigInt[] bigInts) {
-        if(bigInts.length == 0) {
+        if (bigInts.length == 0) {
             // This shouldn't ever be the case, but who knows, 
             // lets be super cautious
-            return new BigInt();
+            return ZERO;
         }
         BigInt x = bigInts[0];
         for(int i = 1; i < bigInts.length; i++) {
             x = x.add(bigInts[i]);
         }
         return x;
+    }
+    
+    public static void exchange(BigInt x, BigInt y) {
+        int[] temp = y.digits;
+        boolean tempSign = y.sign;
+        y.digits = x.digits;
+        y.sign = x.sign;
+        x.digits = temp;
+        x.sign = tempSign;
     }
 }
