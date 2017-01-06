@@ -102,6 +102,12 @@ public class BigIntTest {
         c = x.add(y);
         
         assertEquals("237575612496869616128330959246691442789668093831859091211841189151193056232675893000420167057226618690617295871193124273810103132971989189817362089663244991316013195154392533789819516251815234423837543333378436434372343382066451532356227024071170836684963256449394444219564763444278598462806285900759176171432422224247721973357069679450845429490994589838837887385581057601658821572712297100416", c.toString());
+        
+        x = new BigInt();
+        y = new BigInt(1);
+        c = x.add(y);
+        
+        assertEquals("1", c.toString());
     }
     
     @Test
@@ -134,6 +140,12 @@ public class BigIntTest {
         b = new BigInt();
         c = a.sub(b);
         assertEquals("0", c.toString());
+        
+        a = new BigInt();
+        b = new BigInt(1);
+        c = a.sub(b);
+        
+        assertEquals("-1", c.toString());
         
         a = new BigInt(474586);
         b = new BigInt(1289);
@@ -372,6 +384,10 @@ public class BigIntTest {
         a = new BigInt("8435238458243858");
         b = new BigInt("-10");
         assertEquals("-843523845824385", a.div(b).quotient.toString());
+        
+        a = new BigInt("31745");
+        b = new BigInt("20814");
+        assertEquals("10931", a.div(b).rest.toString());
     }
     
     @Test
@@ -409,6 +425,10 @@ public class BigIntTest {
         b = new BigInt();
         assertEquals("457658", a.gcd(b).toString());
         
+        a = new BigInt("9659658865765");
+        b = new BigInt("253254353464566");
+        assertEquals("1", a.gcd(b).toString());
+        
 //        a = new BigInt("457658332");
 //        b = new BigInt("2");
 //        assertEquals("2", a.gcd(b).toString());
@@ -423,21 +443,13 @@ public class BigIntTest {
     
     @Test
     public void testEgcd() {
-        BigInt x = new BigInt("9659658865765");
-        BigInt y = new BigInt("253254353464566");
+        BigInt x = new BigInt("99");
+        BigInt y = new BigInt("78");
         GcdLinComb l = x.egcd(y);
         
-        assertEquals("1", l.gcd.toString());
-        assertEquals("78054515421037", l.u.toString());
-        assertEquals("-2977164978944", l.v.toString());
-        
-        x = new BigInt("9659658865765");
-        y = new BigInt("253254353464566");
-        l = x.egcd(y);
-        
-        assertEquals("1", l.gcd.toString());
-        assertEquals("78054515421037", l.u.toString());
-        assertEquals("-2977164978944", l.v.toString());
+        assertEquals("3", l.gcd.toString());
+        assertEquals("-11", l.u.toString());
+        assertEquals("14", l.v.toString());
         
         x = new BigInt("123701");
         y = new BigInt("97987886");
@@ -447,13 +459,45 @@ public class BigIntTest {
         assertEquals("12085603", l.u.toString());
         assertEquals("-15257", l.v.toString());
         
-//        x = new BigInt("37346456345735676576532454364574574568651311243324325132543464656451");
-//        y = new BigInt("843843856945931838738388543854388483737554886486859795645995964384388437532737173737735858832853853228383287327373271");
-//        
-//        l = x.egcd(y);
-//        assertEquals("1", l.gcd.toString());
-//        assertEquals("286422626281851984584144037425111097861290685744530351682868848312949003301879404669212646659808417376222701190299513", l.u.toString());
-//        assertEquals("12676361889485837430252314661643787671980085174372220702747469528422", l.v.toString());
+        x = new BigInt("9659658865765");
+        y = new BigInt("253254353464566");
+        l = x.egcd(y);
+        
+        assertEquals("1", l.gcd.toString());
+        assertEquals("78054515421037", l.u.toString());
+        assertEquals("-2977164978944", l.v.toString());
+        
+        x = new BigInt("38684564568864386436");
+        y = new BigInt("25325435346475661");
+        l = x.egcd(y);
+        
+        assertEquals("1", l.gcd.toString());
+        assertEquals("124906052573443", l.u.toString());
+        assertEquals("-190793808268798327", l.v.toString());
+        
+        x = new BigInt("37346456345735676576532454364574574568651311243324325132543464656451");
+        y = new BigInt("843843856945931838738388543854388483737554886486859795645995964384388437532737173737735858832853853228383287327373271");
+        
+        l = x.egcd(y);
+        assertEquals("1", l.gcd.toString());
+        assertEquals("286422626281851984584144037425111097861290685744530351682868848312949003301879404669212646659808417376222701190299513", l.u.toString());
+        assertEquals("-12676361889485837430252314661643787671980085174372220702747469528422", l.v.toString());
+        
+        x = new BigInt("3734645634573567657653245436457457456865131");
+        y = new BigInt("6585684354564575676587687687697657686757546464545343431");
+        
+        l = x.egcd(y);
+        assertEquals("1", l.gcd.toString());
+        assertEquals("-898404493543403350987229695886807999528328550372311725", l.u.toString());
+        assertEquals("509472097241894736768214105866071836443696", l.v.toString());
+        
+        x = new BigInt("373464563457356765765");
+        y = new BigInt("6585684354564575676587687687697657");
+        
+        l = x.egcd(y);
+        assertEquals("1", l.gcd.toString());
+        assertEquals("-568931575791208729935848069175400", l.u.toString());
+        assertEquals("32263280647925627793", l.v.toString());
     }
     
     @Test
@@ -462,6 +506,11 @@ public class BigIntTest {
         BigInt b = new BigInt(23);
         BigInt c = a.div(b).quotient;
         assertEquals("1234", c.toString());
+        
+        a = new BigInt(99);
+        b = new BigInt(78);
+        c = a.div(b).rest;
+        assertEquals(c.toString(), "21");
         
         a = new BigInt(5675745);
         b = new BigInt(1000);

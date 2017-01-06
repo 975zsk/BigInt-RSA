@@ -180,13 +180,25 @@ public class BigIntOperations {
         return div(x, y, 1);
     }
     
+    private int toInt(BigInt x) {
+        int res = 0;
+        int i = x.digits.length - 1;
+        int k = 0;
+        while(k < x.digits.length - 1) {
+            res = res + (int) (x.digits[k] * Math.pow(BASE, i));
+            i--;
+            k++;
+        }
+        return res + x.digits[x.digits.length - 1];
+    }
+    
     private DivisionResult div(BigInt x, BigInt y, int factor) {
         if (y.isZero()) {
             throw new IllegalArgumentException("Division by zero is not allowed");
         }
         
         if (x.sign != y.sign) {
-            return div(x.setSign(true), y.setSign(true), factor).neg();
+            return div(x.abs(), y.abs(), factor).neg();
         }
         
         if (y.gt(x)) {
@@ -197,6 +209,12 @@ public class BigIntOperations {
         }
         if (y.equals(new BigInt(1))) {
             return new DivisionResult(x, ZERO);
+        }
+        
+        if(x.digits.length < 5) {
+            int iX = toInt(x);
+            int iY = toInt(y);
+            return new DivisionResult(new BigInt(iX / iY), new BigInt(iX % iY));
         }
         
         if (y.digits[0] < BASE / 2) {
@@ -212,19 +230,22 @@ public class BigIntOperations {
         BigInt rest = new BigInt();
         int indexR = y.digits.length;
         int[] digits = Arrays.copyOfRange(x.digits, 0, y.digits.length);
+        boolean firstRun = true;
+        int guess;
         
-        while(indexR < x.digits.length) {
+        while(indexR < x.digits.length || firstRun) {
             dividend = new BigInt(digits);
             if (dividend.lt(y)) {
                 dividend.shiftLeftBy(1);
                 dividend.digits[dividend.digits.length - 1] = x.digits[indexR];
                 indexR++;
             }
-            int guess = Helper.guess(dividend, y);
+            guess = Helper.guess(dividend, y);
             guesses.add(guess);
             mulRes = new BigInt(guess).mul(y);
             rest = dividend.sub(mulRes);
             digits = rest.digits;
+            firstRun = false;
         }
         
         int ds[] = new int[guesses.size()];
@@ -347,36 +368,35 @@ public class BigIntOperations {
         return x;
     }
     
-    public GcdLinComb egcd(BigInt a, BigInt b) {
-//        if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
-//        if (x.isZero()) { return y; }
-//        if (y.isZero()) { return x; }
-//        if (x.isNeg()) { x = x.neg(); }
-//        if (y.isNeg()) { y = y.neg(); }
+    public GcdLinComb egcd(BigInt a, BigInt b) {        
         
-//        if(Math.abs(x.digits.length - y.digits.length) > 10) {
-//            if(x.lt(y)) {
-//                Helper.exchange(x, y);
-//                return gcd(x.mod(y), y);
-//            }
-//        }
-
+        // TODO: check for valid a, b
         
-
         BigInt u = new BigInt(1); BigInt v = new BigInt(0);
         BigInt s = new BigInt(0); BigInt t = new BigInt(1);
+        BigInt uO, vO, q;
+        DivisionResult dv = a.div(b);
+        q = dv.quotient;
         
-        while(!b.equals(ZERO)) {
-            if(a.gt(b)) {
-                a = a.sub(b);
-                u = u.sub(s);
-                v = v.sub(t);
+        while(!b.isZero()) {
+            uO = u;
+            vO = v;
+            
+            u = new BigInt(s);
+            v = new BigInt(t);
+            
+            s = uO.sub(q.mul(s));
+            t = vO.sub(q.mul(t));
+            
+            a = b;
+            b = dv.rest;
+            
+            if(!b.isZero()) {
+                dv = a.div(b);
             }
-            else {
-                b = b.sub(a);
-                s = s.sub(u);
-                t = t.sub(v);
-            }
+            
+            q = dv.quotient;
+            
         }
         
         return new GcdLinComb(a, u, v);
