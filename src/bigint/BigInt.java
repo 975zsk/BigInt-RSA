@@ -136,6 +136,10 @@ public class BigInt {
         return operations.pow(this, e);
     }
     
+    public BigInt powModPrim(int e, BigInt p) {
+        return operations.powModPrim(this, e, p);
+    }
+    
     public BigInt mod(BigInt m) {
         return operations.mod(this, m);
     }

@@ -321,6 +321,23 @@ public class BigIntOperations {
         return pow(x, e, m, true);
     }
     
+    public BigInt powModPrim(BigInt x, int e, BigInt p) {
+        BigInt pLow = p.sub(new BigInt(1));
+        if(new BigInt(e).lt(pLow)) {
+            // e < p - 1
+            return powMod(x, e, p);
+        }
+        if(x.lt(p)) {
+            e = Helper.toInt(new BigInt(e).mod(pLow));
+            return powMod(x, e, p);
+        }
+        if(gcd(x, p).equals(new BigInt(1))) {
+            // gcd(x, p) == 1
+            e = Helper.toInt(new BigInt(e).mod(pLow));
+        }
+        return powMod(x, e, p);
+    }
+    
     public BigInt gcd(BigInt x, BigInt y) {
         if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
         if (x.isZero()) { return y; }

@@ -91,4 +91,18 @@ public class Helper {
         x.digits = temp;
         x.sign = tempSign;
     }
+    
+    public static int toInt(BigInt x) {
+        final int lastIndex = x.digits.length - 1;
+        int res = 0;
+        int i = lastIndex;
+        int k = 0;
+        while(k < lastIndex) {
+            res = res + (int) (x.digits[k] * Math.pow(BASE, i));
+            k++;
+            i--;
+        }
+        res = res + x.digits[lastIndex];
+        return res;
+    }
 }
