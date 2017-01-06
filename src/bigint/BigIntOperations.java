@@ -180,18 +180,6 @@ public class BigIntOperations {
         return div(x, y, 1);
     }
     
-    private int toInt(BigInt x) {
-        int res = 0;
-        int i = x.digits.length - 1;
-        int k = 0;
-        while(k < x.digits.length - 1) {
-            res = res + (int) (x.digits[k] * Math.pow(BASE, i));
-            i--;
-            k++;
-        }
-        return res + x.digits[x.digits.length - 1];
-    }
-    
     private DivisionResult div(BigInt x, BigInt y, int factor) {
         if (y.isZero()) {
             throw new IllegalArgumentException("Division by zero is not allowed");
@@ -209,12 +197,6 @@ public class BigIntOperations {
         }
         if (y.equals(new BigInt(1))) {
             return new DivisionResult(x, ZERO);
-        }
-        
-        if(x.digits.length < 5) {
-            int iX = toInt(x);
-            int iY = toInt(y);
-            return new DivisionResult(new BigInt(iX / iY), new BigInt(iX % iY));
         }
         
         if (y.digits[0] < BASE / 2) {
