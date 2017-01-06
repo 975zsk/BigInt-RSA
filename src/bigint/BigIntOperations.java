@@ -246,6 +246,10 @@ public class BigIntOperations {
         return new DivisionResult(res, rest);
     }
     
+    public BigInt mod(BigInt x, BigInt m) {
+        return x.div(m).rest;
+    }
+    
     // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
     public BigInt karatsuba(BigInt x, BigInt y) {
         int size = Math.max(x.digits.length, y.digits.length);
@@ -283,9 +287,10 @@ public class BigIntOperations {
         return res1.add(res2).add(d);   
     }
     
-    public BigInt pow(BigInt x, int e) {
+    private BigInt pow(BigInt x, int e, BigInt m, boolean withMod) {
         if (e < 0) { throw new IllegalArgumentException("Negative exponents are not supported"); }
         if (e == 1) { return x; }
+        if (m.lte(ZERO)) { throw new IllegalArgumentException("The modul must be positive, but was " + m.toString() + "."); }
         
         BigInt res = new BigInt(1);
         if (e == 0) {
@@ -294,34 +299,26 @@ public class BigIntOperations {
         String bits = Integer.toBinaryString(e);
         for(int i = 0; i < bits.length(); i++) {
             res = res.mul(res);
+            if(withMod) {
+                res = res.mod(m);
+            }
             if (bits.charAt(i) == '1') {
                 res = res.mul(x);
+                if(withMod) {
+                    res = res.mod(m);
+                }
             }
         }
         return res;
     }
     
-    public BigInt mod(BigInt x, BigInt m) {
-        return x.div(m).rest;
+    public BigInt pow(BigInt x, int e) {
+        // The module will not be used in the case
+        return pow(x, e, new BigInt(1), false);
     }
     
     public BigInt powMod(BigInt x, int e, BigInt m) {
-        if (e < 0) { throw new IllegalArgumentException("Negative exponents are not supported"); }
-        if (m.lte(ZERO)) { throw new IllegalArgumentException("The modul must be positive"); }
-        if (e == 1) { return x; }
-        
-        BigInt res = new BigInt(1);
-        if (e == 0) {
-            return res;
-        }
-        String bits = Integer.toBinaryString(e);
-        for(int i = 0; i < bits.length(); i++) {
-            res = res.mul(res).div(m).rest;
-            if (bits.charAt(i) == '1') {
-                res = res.mul(x).div(m).rest;
-            }
-        }
-        return res;
+        return pow(x, e, m, true);
     }
     
     public BigInt gcd(BigInt x, BigInt y) {
