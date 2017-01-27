@@ -2,7 +2,7 @@ package bigint;
 
 /**
  *
- * @author jacke
+ * @author Jakob Pupke
  */
 public class GcdLinComb {
     public BigInt gcd;

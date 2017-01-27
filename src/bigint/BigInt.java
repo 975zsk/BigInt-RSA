@@ -31,6 +31,14 @@ public class BigInt {
         sign = integer >= 0;
     }
     
+    public int getFirstDigit() {
+        return digits[0];
+    }
+    
+    public int getSize() {
+        return digits.length;
+    }
+    
     public BigInt(long integer) {
         String[] stringDigits = Long.toString(integer).split("");
         digits = new int[stringDigits.length];

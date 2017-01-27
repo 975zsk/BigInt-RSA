@@ -5,12 +5,12 @@ import static bigint.BigInt.ZERO;
 
 /**
  *
- * @author jacke
+ * @author Jakob Pupke
  */
 public class Helper {
     
     /*
-     * Efficiently calculates the quotient by dividing
+     * Calculates the quotient by dividing
      * only the first couple of digits
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
