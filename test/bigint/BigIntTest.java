@@ -4,8 +4,6 @@
  */
 package bigint;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -14,17 +12,6 @@ import static org.junit.Assert.*;
  * @author jacke
  */
 public class BigIntTest {
-    
-    public BigIntTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
 
     /**
      * Test of toString method, of class BigInt.
@@ -403,6 +390,19 @@ public class BigIntTest {
         
         a = new BigInt(38848);
         e = 49838;
+        m = new BigInt(8456765);
+        assertEquals("4018389", a.powMod(e, m).toString());
+    }
+    
+    @Test
+    public void testPowModReal() {
+        BigInt a = new BigInt(2);
+        BigInt e = new BigInt(588);
+        BigInt m = new BigInt(57687);
+        assertEquals("25348", a.powMod(e, m).toString());
+        
+        a = new BigInt(38848);
+        e = new BigInt(49838);
         m = new BigInt(8456765);
         assertEquals("4018389", a.powMod(e, m).toString());
     }

@@ -16,6 +16,8 @@ public class BigInt {
     
     public static final int BASE = 10;
     public static BigInt ZERO = new BigInt();
+    public static BigInt ONE = new BigInt(1);
+    public static BigInt TWO = new BigInt(2);
     
     public BigInt() {
         digits = new int[1];
@@ -153,6 +155,10 @@ public class BigInt {
     }
     
     public BigInt powMod(int e, BigInt m) {
+        return operations.powMod(this, e, m);
+    }
+    
+    public BigInt powMod(BigInt e, BigInt m) {
         return operations.powMod(this, e, m);
     }
     

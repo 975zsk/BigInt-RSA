@@ -193,9 +193,9 @@ public class BigIntOperations {
             return new DivisionResult(ZERO, x);
         }
         if (y.equals(x)) {
-            return new DivisionResult(new BigInt(1), ZERO);
+            return new DivisionResult(BigInt.ONE, ZERO);
         }
-        if (y.equals(new BigInt(1))) {
+        if (y.equals(BigInt.ONE)) {
             return new DivisionResult(x, ZERO);
         }
         
@@ -292,7 +292,7 @@ public class BigIntOperations {
         if (e == 1) { return x; }
         if (m.lte(ZERO)) { throw new IllegalArgumentException("The modul must be positive, but was " + m.toString() + "."); }
         
-        BigInt res = new BigInt(1);
+        BigInt res = BigInt.ONE;
         if (e == 0) {
             return res;
         }
@@ -314,15 +314,28 @@ public class BigIntOperations {
     
     public BigInt pow(BigInt x, int e) {
         // The module will not be used in the case
-        return pow(x, e, new BigInt(1), false);
+        return pow(x, e, BigInt.ONE, false);
     }
     
     public BigInt powMod(BigInt x, int e, BigInt m) {
         return pow(x, e, m, true);
     }
     
+    public BigInt powMod(BigInt a, BigInt n, BigInt m) {
+        BigInt res = BigInt.ONE;
+        BigInt t = new BigInt(a);
+        while(n.gt(BigInt.ZERO)) {
+            if(n.mod(BigInt.TWO).equals(BigInt.ONE)) {
+                res = res.mul(t).mod(m);
+            }
+            t = t.mul(t).mod(m);
+            n = n.div(BigInt.TWO).quotient;
+        }
+        return res;
+    }
+    
     public BigInt powModPrim(BigInt x, int e, BigInt p) {
-        BigInt pLow = p.sub(new BigInt(1));
+        BigInt pLow = p.sub(BigInt.ONE);
         if(new BigInt(e).lt(pLow)) {
             // e < p - 1
             return powMod(x, e, p);
@@ -331,7 +344,7 @@ public class BigIntOperations {
             e = Helper.toInt(new BigInt(e).mod(pLow));
             return powMod(x, e, p);
         }
-        if(gcd(x, p).equals(new BigInt(1))) {
+        if(gcd(x, p).equals(BigInt.ONE)) {
             // gcd(x, p) == 1
             e = Helper.toInt(new BigInt(e).mod(pLow));
         }
@@ -368,8 +381,8 @@ public class BigIntOperations {
         
         // TODO: check for valid a, b
         
-        BigInt u = new BigInt(1); BigInt v = new BigInt(0);
-        BigInt s = new BigInt(0); BigInt t = new BigInt(1);
+        BigInt u = BigInt.ONE; BigInt v = new BigInt(0);
+        BigInt s = new BigInt(0); BigInt t = BigInt.ONE;
         BigInt uO, vO, q;
         DivisionResult dv = a.div(b);
         q = dv.quotient;
