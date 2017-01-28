@@ -9,10 +9,10 @@ import org.junit.Test;
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterEulerTest extends PrimeTesterTest {
-    
+public class PrimeTesterEulerTest extends PrimeTesterTest<PrimeTesterEuler> {
+
     public PrimeTesterEulerTest() {
-        tester = new PrimeTesterEuler();
+        super(new PrimeTesterEuler.Factory());
     }
     
     @Test

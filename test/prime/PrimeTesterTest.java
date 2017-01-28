@@ -8,11 +8,16 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  * @author Jakob Pupke
+ * @param <T>
  */
-public class PrimeTesterTest {
+public class PrimeTesterTest<T extends PrimeTester> {
     
-    PrimeTester tester;
+    PrimeTestRunner<T> tester;
     static int ROUNDS = 50;
+    
+    public PrimeTesterTest(TesterFactory<T> fact) {
+        this.tester = new PrimeTestRunner<>(fact);
+    }
     
     public void runIsPrimeTest() throws ExecutionException {
         
@@ -55,5 +60,10 @@ public class PrimeTesterTest {
         
         prime = new BigInt("457568756845876866786");
         assertFalse(tester.isPrime(prime, ROUNDS));
+        
+        // Finally lets test some very long Primenumber
+        
+        //prime = new BigInt("28591045597720075832628274729885724490653298360003309382769144463123258670807750560985604954275365591715208615509779345682419533206637382048824349415329839450792353652240682445321955199147316594996133");
+        //assertTrue(tester.isPrime(prime, ROUNDS));
     }
 }

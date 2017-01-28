@@ -10,9 +10,9 @@ import static org.junit.Assert.*;
  * @author Jakob Pupke
  */
 public class PrimeTesterFermatTest extends PrimeTesterTest {
-    
+
     public PrimeTesterFermatTest() {
-        tester = new PrimeTesterFermat();
+        super(new PrimeTesterFermat.Factory());
     }
     
     @Test

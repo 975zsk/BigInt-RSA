@@ -9,15 +9,21 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PrimeTesterEuler extends PrimeTester {
 
-    @Override
-    protected BigInt getExponent(BigInt number) {
-        return nMinusOne.div(BigInt.TWO).getQuotient();
+    public PrimeTesterEuler(BigInt n) {
+        super(n);
+        exponent = nMinusOne.div(BigInt.TWO).getQuotient();
     }
 
     @Override
     protected boolean condition(BigInt result) {
         return !( result.equals(BigInt.ONE) || nMinusOne.equals(result) );
     }
+    
+  
 
-        
+    public static class Factory implements TesterFactory<PrimeTesterEuler> {
+        public PrimeTesterEuler build(BigInt number) {
+            return new PrimeTesterEuler(number);
+        }
+    }
 }

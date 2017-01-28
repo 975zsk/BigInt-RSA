@@ -2,22 +2,26 @@ package prime;
 
 import bigint.BigInt;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
  *
  * @author Jakob Pupke
  */
 public class PrimeTesterFermat extends PrimeTester {
 
-    @Override
-    protected BigInt getExponent(BigInt number) {
-        return nMinusOne;
+    public PrimeTesterFermat(BigInt n) {
+        super(n);
+        exponent = nMinusOne;
     }
 
     @Override
     protected boolean condition(BigInt result) {
         return !result.equals(BigInt.ONE);
+    }
+    
+    public static class Factory implements TesterFactory<PrimeTesterFermat> {
+        public PrimeTesterFermat build(BigInt number) {
+            return new PrimeTesterFermat(number);
+        }
     }
 
 }
