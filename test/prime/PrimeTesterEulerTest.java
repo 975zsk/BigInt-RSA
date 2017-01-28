@@ -1,6 +1,7 @@
 package prime;
 
 import bigint.BigInt;
+import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class PrimeTesterEulerTest extends PrimeTesterTest {
     }
     
     @Test
-    public void testIsPrime() {
+    public void testIsPrime() throws ExecutionException {
         runIsPrimeTest();
     }
     

@@ -1,6 +1,7 @@
 package prime;
 
 import bigint.BigInt;
+import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -13,7 +14,7 @@ public class PrimeTesterTest {
     PrimeTester tester;
     static int ROUNDS = 50;
     
-    public void runIsPrimeTest() {
+    public void runIsPrimeTest() throws ExecutionException {
         
         // PRIMES
         
@@ -24,6 +25,15 @@ public class PrimeTesterTest {
         assertTrue(tester.isPrime(prime, ROUNDS));
         
         prime = new BigInt(2);
+        assertTrue(tester.isPrime(prime, ROUNDS));
+        
+        prime = new BigInt(5);
+        assertTrue(tester.isPrime(prime, ROUNDS));
+        
+        prime = new BigInt(7);
+        assertTrue(tester.isPrime(prime, ROUNDS));
+        
+        prime = new BigInt(13);
         assertTrue(tester.isPrime(prime, ROUNDS));
         
         // NOT PRIMES

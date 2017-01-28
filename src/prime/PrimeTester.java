@@ -1,6 +1,13 @@
 package prime;
 
 import bigint.BigInt;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -9,9 +16,20 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 abstract class PrimeTester {
     
+    class Control {
+        /* If a thread proves that n is not a prime
+           it sets the flag to false. Then all other
+           threads know that they can stop testing
+        */
+        public volatile boolean isPrime = true;
+    }
+    
+    private static final int NUM_THREADS = 5;
+    
     BigInt n;
     BigInt nMinusOne;
     BigInt exponent;
+    private final Control control = new Control();
     
     static final BigInt[] FIRST_PRIMES = {
         new BigInt(2),
@@ -61,22 +79,52 @@ abstract class PrimeTester {
         exponent = getExponent(number);
     }
     
-    public boolean isPrime(BigInt number, int rounds) {
+    public boolean isPrime(BigInt number, int rounds) throws ExecutionException {
         setFields(number);
+        
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         
         if(firstPrimesContains(number))
             return true;
         
-        if(!passesPreTest(number))
-            return false;
+        /* This actually makes it slower */ 
+        //if(!passesPreTest(number))
+        //    return false;
         
-        int i;
-        for(i = 0; i < rounds; i++) {
-            if(isWitness())
+        List<Future<Boolean>> list = new ArrayList<>();
+        int roundsPerThread = rounds / NUM_THREADS;
+        for(int i = 0; i < NUM_THREADS; i++) {
+            Callable<Boolean> worker = new Worker(roundsPerThread);
+            Future<Boolean> submit = executor.submit(worker);
+            list.add(submit);
+        }
+        
+        for(Future<Boolean> future : list) {
+            try {
+                boolean res = future.get();
+                if(!res) return false;
+            } catch (InterruptedException | ExecutionException e) {
+                System.out.println("Execution failed..");
                 return false;
+            } finally {
+                executor.shutdown();
+            }
         }
         
         return true;
+    }
+    
+    private boolean testForWitnesses(int rounds) {
+        int i;
+        // Only do this as long as control.isPrime is true
+        for(i = 0; i < rounds && control.isPrime; i++) {
+            if(isWitness()) {
+                control.isPrime = false;
+                return false;
+            }
+        }
+        
+        return control.isPrime;
     }
     
     protected boolean isPrime(BigInt number, int[] bases) {
@@ -106,5 +154,20 @@ abstract class PrimeTester {
             a = nMinusOne;
         BigInt res = a.powMod(exponent, n);
         return condition(res);
+    }
+    
+    class Worker implements Callable<Boolean> {
+        
+        int r;
+        
+        public Worker(int r) {
+            this.r = r;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+            return testForWitnesses(r);
+        }
+        
     }
 }
