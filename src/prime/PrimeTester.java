@@ -24,7 +24,7 @@ abstract class PrimeTester {
         public volatile boolean isPrime = true;
     }
     
-    private static final int NUM_THREADS = 5;
+    private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     
     BigInt n;
     BigInt nMinusOne;
