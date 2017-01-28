@@ -1,12 +1,17 @@
 package prime;
 
 import bigint.BigInt;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
  * @author Jakob Pupke
  */
 abstract class PrimeTester {
+    
+    BigInt n;
+    BigInt nMinusOne;
+    BigInt exponent;
     
     static final BigInt[] FIRST_PRIMES = {
         new BigInt(2),
@@ -23,32 +28,83 @@ abstract class PrimeTester {
         new BigInt(37)
     };
     
-    protected boolean passesPreTest(BigInt n) {
-        if(n.lte(BigInt.ONE)) {
+    abstract protected BigInt getExponent(BigInt number);
+    abstract protected boolean condition(BigInt result);
+    
+    private boolean passesPreTest(BigInt n) {
+        if(n.lte(BigInt.ONE))
             return false;
-        }
-        if(n.isEven() && !n.equals(BigInt.TWO)) {
+        
+        if(n.isEven() && !n.equals(BigInt.TWO))
             return false;
-        }
-        BigInt nMinusOne = n.sub(BigInt.ONE);
+        
         for(BigInt a : FIRST_PRIMES) {
-            if(!a.powMod(nMinusOne, n).equals(BigInt.ONE)) {
+            if(!a.powMod(nMinusOne, n).equals(BigInt.ONE))
                 return false;
-            }
         }
+        
         return true;
     }
     
-    protected boolean firstPrimesContains(BigInt n) {
+    private boolean firstPrimesContains(BigInt n) {
         for(BigInt x : FIRST_PRIMES) {
-            if(x.equals(n)) {
+            if(x.equals(n))
                 return true;
-            }
         }
+        
         return false;
     }
     
-    protected abstract boolean isPrime(BigInt number, int rounds);
-    protected abstract boolean isPrime(BigInt number, int[] bases);
-    protected abstract boolean isWitness(BigInt number);
+    private void setFields(BigInt number) {
+        n = number;
+        nMinusOne = n.sub(BigInt.ONE);
+        exponent = getExponent(number);
+    }
+    
+    public boolean isPrime(BigInt number, int rounds) {
+        setFields(number);
+        
+        if(firstPrimesContains(number))
+            return true;
+        
+        if(!passesPreTest(number))
+            return false;
+        
+        int i;
+        for(i = 0; i < rounds; i++) {
+            if(isWitness())
+                return false;
+        }
+        
+        return true;
+    }
+    
+    protected boolean isPrime(BigInt number, int[] bases) {
+        setFields(number);
+        BigInt a;
+        BigInt res;
+        
+        for(int base : bases) {
+            a = new BigInt(base);
+            res = a.powMod(exponent, n);
+            if(condition(res))
+                return false;
+        }
+        
+        return true;
+    }
+    
+    private boolean isWitness() {
+        final int MIN = 3;
+        int size;
+        if(n.getSize() < MIN)
+            size = n.getSize();
+        else
+            size = ThreadLocalRandom.current().nextInt(MIN, n.getSize() + 1);
+        BigInt a = Generator.getRandomOdd(size);
+        if(a.gte(n))
+            a = nMinusOne;
+        BigInt res = a.powMod(exponent, n);
+        return condition(res);
+    }
 }

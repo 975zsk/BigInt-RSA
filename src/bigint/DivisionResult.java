@@ -22,4 +22,8 @@ public class DivisionResult {
         quotient.sign = !quotient.sign;
         return this;
     }
+    
+    public BigInt getQuotient() {
+        return quotient;
+    }
 }
