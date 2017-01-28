@@ -56,21 +56,12 @@ abstract class PrimeTester {
         if(n.isEven() && !n.equals(BigInt.TWO))
             return false;
         
-        for(BigInt a : FIRST_PRIMES) {
-            if(!a.powMod(nMinusOne, n).equals(BigInt.ONE))
-                return false;
-        }
+//        for(BigInt a : FIRST_PRIMES) {
+//            if(!a.powMod(nMinusOne, n).equals(BigInt.ONE))
+//                return false;
+//        }
         
         return true;
-    }
-    
-    private boolean firstPrimesContains(BigInt n) {
-        for(BigInt x : FIRST_PRIMES) {
-            if(x.equals(n))
-                return true;
-        }
-        
-        return false;
     }
     
     private void setFields(BigInt number) {
@@ -84,12 +75,8 @@ abstract class PrimeTester {
         
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         
-        if(firstPrimesContains(number))
-            return true;
-        
-        /* This actually makes it slower */ 
-        //if(!passesPreTest(number))
-        //    return false;
+        if(!passesPreTest(number))
+            return false;
         
         List<Future<Boolean>> list = new ArrayList<>();
         int roundsPerThread = rounds / NUM_THREADS;
