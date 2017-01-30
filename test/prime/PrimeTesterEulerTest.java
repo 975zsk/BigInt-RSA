@@ -22,7 +22,7 @@ public class PrimeTesterEulerTest extends PrimeTesterTest<PrimeTesterEuler> {
     
     @Test
     public void pseudo() {
-        // These are not Prime Numbers, but Fermat fails for these bases (a)
+        // These are not Prime Numbers, but Euler fails for these bases (a)
         BigInt prime = new BigInt(2001);
         assertTrue(tester.isPrime(prime, new int[] {70, 436, 505, 668, 737, 829, 898, 1103, 1172, 1264, 1333, 1496, 1565, 1931}));
         

@@ -12,6 +12,7 @@ abstract class PrimeTester {
     BigInt n;
     BigInt nMinusOne;
     BigInt exponent;
+    // Concurrency control
     private final Control control = new Control();
     
     public PrimeTester(BigInt n) {
@@ -20,22 +21,15 @@ abstract class PrimeTester {
     }
     
     public class Control {
+        /*
+        Threads check this flag to see if another 
+        thread has found a witness yet
+        */
         private volatile boolean isPrime = true;
     }
     
-    static final BigInt[] FIRST_PRIMES = {
-        new BigInt(2),
-        new BigInt(3),
-        new BigInt(5),
-        new BigInt(7),
-        new BigInt(11),
-        new BigInt(13),
-        new BigInt(17),
-        new BigInt(19),
-        new BigInt(23),
-        new BigInt(29),
-        new BigInt(31),
-        new BigInt(37)
+    static final int[] FIRST_PRIMES = {
+        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37
     };
     
     abstract protected boolean condition(BigInt result);
@@ -47,14 +41,24 @@ abstract class PrimeTester {
         if(n.isEven() && !n.equals(BigInt.TWO))
             return false;
         
-//        for(BigInt a : FIRST_PRIMES) {
-//            if(!a.powMod(nMinusOne, n).equals(BigInt.ONE))
-//                return false;
-//        }
-        
         return true;
     }
     
+    public boolean isInFirstPrimes() {
+        if(n.gt(new BigInt(37))) {
+            return false;
+        }
+        for(int i : FIRST_PRIMES) {
+            if(n.equals(new BigInt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /*
+    This method is called by the threads spawned by the PrimeTestRunner
+    */
     public boolean testForWitnesses(int rounds) {
         int i;
         // Only do this as long as control.isPrime is true

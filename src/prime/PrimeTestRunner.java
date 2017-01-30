@@ -16,6 +16,7 @@ import java.util.concurrent.Future;
 public class PrimeTestRunner<T extends PrimeTester> {
     
     private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
+    private int roundsPerThread;
     T tester;
     TesterFactory<T> fact;
     
@@ -30,12 +31,28 @@ public class PrimeTestRunner<T extends PrimeTester> {
             return false;
         }
         
+        if(tester.isInFirstPrimes()) {
+            return true;
+        }
+        
+        // number < 2**64 test FIRST_PRIMES
+        if(number.lte(new BigInt(Long.MAX_VALUE)) && tester.isPrime(number, PrimeTester.FIRST_PRIMES)) {
+            return true;
+        }
+        
+        // OK randomly choose a and run tasks concurrently
+        
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         
         List<Future<Boolean>> list = new ArrayList<>();
-        int roundsPerThread = rounds / NUM_THREADS;
+        roundsPerThread = rounds / NUM_THREADS;
         for(int i = 0; i < NUM_THREADS; i++) {
-            Callable<Boolean> worker = new Worker(roundsPerThread);
+            Callable<Boolean> worker = new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    return tester.testForWitnesses(roundsPerThread);
+                }
+            };
             Future<Boolean> submit = executor.submit(worker);
             list.add(submit);
         }
@@ -45,33 +62,17 @@ public class PrimeTestRunner<T extends PrimeTester> {
                 boolean res = future.get();
                 if(!res) return false;
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                System.out.println("Execution failed: " + e.getMessage());
                 return false;
             }
         }
         
         executor.shutdown();
-        
         return true;
     }
     
     public boolean isPrime(BigInt number, int[] bases) {
         this.tester = fact.build(number);
         return tester.isPrime(number, bases);
-    }
-    
-    class Worker implements Callable<Boolean> {
-        
-        int r;
-        
-        public Worker(int r) {
-            this.r = r;
-        }
-
-        @Override
-        public Boolean call() throws Exception {
-            return tester.testForWitnesses(r);
-        }
-        
     }
 }

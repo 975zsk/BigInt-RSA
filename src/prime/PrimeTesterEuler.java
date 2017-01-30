@@ -1,7 +1,6 @@
 package prime;
 
 import bigint.BigInt;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -19,8 +18,6 @@ public class PrimeTesterEuler extends PrimeTester {
         return !( result.equals(BigInt.ONE) || nMinusOne.equals(result) );
     }
     
-  
-
     public static class Factory implements TesterFactory<PrimeTesterEuler> {
         public PrimeTesterEuler build(BigInt number) {
             return new PrimeTesterEuler(number);
