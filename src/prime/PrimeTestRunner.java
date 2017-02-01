@@ -25,6 +25,10 @@ public class PrimeTestRunner<T extends PrimeTester> {
     }
     
     public boolean isPrime(BigInt number, int rounds) {
+        return isPrime(number, rounds, true);
+    }
+    
+    public boolean isPrime(BigInt number, int rounds, boolean checkFirstPrimes) {
         this.tester = fact.build(number);
         
         if(!tester.passesPreTest()) {
@@ -35,7 +39,7 @@ public class PrimeTestRunner<T extends PrimeTester> {
             return true;
         }
         
-        if(!tester.isPrime(number, PrimeTester.FIRST_PRIMES)) {
+        if(checkFirstPrimes && !tester.isPrime(number, PrimeTester.FIRST_PRIMES)) {
             return false;
         }
         

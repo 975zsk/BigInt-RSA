@@ -4,6 +4,7 @@ import bigint.BigInt;
 import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import prime.Generator;
 
 /**
  *
@@ -17,15 +18,15 @@ public class RsaTest {
         BigInt q = new BigInt("3560841906445833920513");
         BigInt e = new BigInt(5);
         Rsa rsa = new Rsa(p, q, e);
-        assertEquals(rsa.getD().toString(), "239272276490031101741495168957570710555853");
-        assertEquals(rsa.getPhiN().toString(), "598180691225077754353737922393926776389632");
+        assertEquals(rsa.d.toString(), "239272276490031101741495168957570710555853");
+        assertEquals(rsa.phiN.toString(), "598180691225077754353737922393926776389632");
         
         p = new BigInt("7455602825647884208337395736200454918783366342657");
         q = new BigInt("4659775785220018543264560743076778192897");
         e = new BigInt(65537);
         rsa = new Rsa(p, q, e);
-        assertEquals(rsa.getD().toString(), "11262063260827444975785094392604245467823982685616016111446723766766056794189524545503233");
-        assertEquals(rsa.getPhiN().toString(), "34741437511171958643352682099698961413263372712036566151842030383739565268100676400971776");
+        assertEquals(rsa.d.toString(), "11262063260827444975785094392604245467823982685616016111446723766766056794189524545503233");
+        assertEquals(rsa.phiN.toString(), "34741437511171958643352682099698961413263372712036566151842030383739565268100676400971776");
     }
     
     @Test
@@ -34,8 +35,8 @@ public class RsaTest {
         BigInt q = new BigInt("4659775785220018543264560743076778192897");
         BigInt e = new BigInt("65537");
         Rsa rsa = new Rsa(p, q, e);
-        assertEquals(rsa.getD().toString(), "11262063260827444975785094392604245467823982685616016111446723766766056794189524545503233");
-        assertEquals(rsa.getPhiN().toString(), "34741437511171958643352682099698961413263372712036566151842030383739565268100676400971776");
+        assertEquals(rsa.d.toString(), "11262063260827444975785094392604245467823982685616016111446723766766056794189524545503233");
+        assertEquals(rsa.phiN.toString(), "34741437511171958643352682099698961413263372712036566151842030383739565268100676400971776");
         
         Keys keys = rsa.generateRSAKeys();
         
@@ -58,8 +59,8 @@ public class RsaTest {
         BigInt q = new BigInt("3560841906445833920513");
         BigInt e = new BigInt(5);
         Rsa rsa = new Rsa(p, q, e);
-        assertEquals(rsa.getD().toString(), "239272276490031101741495168957570710555853");
-        assertEquals(rsa.getPhiN().toString(), "598180691225077754353737922393926776389632");
+        assertEquals(rsa.d.toString(), "239272276490031101741495168957570710555853");
+        assertEquals(rsa.phiN.toString(), "598180691225077754353737922393926776389632");
         
         Keys keys = rsa.generateRSAKeys();
         
@@ -102,8 +103,9 @@ public class RsaTest {
         BigInt e = new BigInt("7919");
         Rsa rsa = new Rsa(e, 50);
         Keys keys = rsa.generateRSAKeys();
-   
-        BigInt plain = new BigInt("34536457568896");
+        
+        // Some random message
+        BigInt plain = Generator.getRandom(50);
         BigInt cipher = Rsa.encrypt(keys.publicKey, plain);
         BigInt deciphered = Rsa.decrypt(keys.secretKey, cipher);
         assertEquals(plain.toString(), deciphered.toString());

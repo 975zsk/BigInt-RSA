@@ -40,37 +40,30 @@ public final class Rsa {
         this.e = e;
         this.size = size;
         setRandomPrimes();
-        calculateN();
-        calculatePhiN();
-        calculateD();
+        calculateValues();
     }
     
     public Rsa(BigInt e) throws InterruptedException, ExecutionException {
         this.e = e;
         setRandomPrimes();
-        calculateN();
-        calculatePhiN();
-        calculateD();
+        calculateValues();
     }
     
     public Rsa(BigInt p, BigInt q, BigInt e) {
         this.p = p;
         this.q = q;
         this.e = e;
+        calculateValues();
+    }
+    
+    private void calculateValues() {
         calculateN();
         calculatePhiN();
         calculateD();
     }
     
-    public BigInt getD() {
-        return d;
-    }
-    
-    public BigInt getPhiN() {
-        return phiN;
-    }
-    
-    public void setRandomPrimes() throws InterruptedException, ExecutionException {
+    private void setRandomPrimes() throws InterruptedException, ExecutionException {
+        // get p and q concurrently
         ExecutorService executor = Executors.newFixedThreadPool(2);
         List<Future<BigInt>> list = new ArrayList<>();
         
@@ -132,7 +125,8 @@ public final class Rsa {
         a = Generator.getRandomOdd(size);
         while(true) {
             if(eulerTester.isPrime(a, rounds)) {
-                if(millerRabinTester.isPrime(a, rounds)) {
+                // Now test with Miller-Rabin but without checking first primes 
+                if(millerRabinTester.isPrime(a, rounds, false)) {
                     break;
                 }
             }
