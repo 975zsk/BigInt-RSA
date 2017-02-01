@@ -485,16 +485,23 @@ public class BigIntTest {
     
     @Test
     public void testEgcd() {
-        BigInt x = new BigInt("99");
-        BigInt y = new BigInt("78");
+        BigInt x = new BigInt(99);
+        BigInt y = new BigInt(78);
         GcdLinComb l = x.egcd(y);
         
         assertEquals("3", l.gcd.toString());
         assertEquals("-11", l.u.toString());
         assertEquals("14", l.v.toString());
         
-        x = new BigInt("123701");
-        y = new BigInt("97987886");
+        x = new BigInt(47);
+        y = new BigInt(60);
+        l = x.egcd(y);
+        
+        assertEquals("23", l.u.toString());
+        assertEquals("-18", l.v.toString());
+        
+        x = new BigInt(123701);
+        y = new BigInt(97987886);
         l = x.egcd(y);
         
         assertEquals("1", l.gcd.toString());
@@ -540,6 +547,14 @@ public class BigIntTest {
         assertEquals("1", l.gcd.toString());
         assertEquals("-568931575791208729935848069175400", l.u.toString());
         assertEquals("32263280647925627793", l.v.toString());
+        
+        x = new BigInt("18");
+        y = new BigInt("21803866033023063540");
+        
+        l = x.egcd(y);
+        assertEquals("18", l.gcd.toString());
+        assertEquals("1", l.u.toString());
+        assertEquals("-1282580354883709620", l.v.toString());
     }
     
     @Test

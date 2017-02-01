@@ -66,9 +66,12 @@ public abstract class PrimeTesterTest<T extends PrimeTester> {
         prime = new BigInt("457568756845876866786");
         assertFalse(tester.isPrime(prime, ROUNDS));
         
-        // Finally lets test some very long Primenumber. Takes very long..
+        // PRIMES
         
-        //prime = new BigInt("28591045597720075832628274729885724490653298360003309382769144463123258670807750560985604954275365591715208615509779345682419533206637382048824349415329839450792353652240682445321955199147316594996133");
-        //assertTrue(tester.isPrime(prime, ROUNDS));
+        prime = new BigInt("3413655180212895498178781318649304374323280987088119887692331010323414684827125197672300150960027799");
+        assertTrue(tester.isPrime(prime, ROUNDS));
+        
+        prime = new BigInt("5092943506518719889812416360081347678591043664240116855478706414621684398967230150244531492607706873");
+        assertTrue(tester.isPrime(prime, ROUNDS));
     }
 }

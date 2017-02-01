@@ -28,7 +28,7 @@ abstract class PrimeTester {
         private volatile boolean isPrime = true;
     }
     
-    static final int[] FIRST_PRIMES = {
+    public static final int[] FIRST_PRIMES = {
         2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37
     };
     

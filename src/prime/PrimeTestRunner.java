@@ -35,12 +35,11 @@ public class PrimeTestRunner<T extends PrimeTester> {
             return true;
         }
         
-        // number < 2**64 test FIRST_PRIMES
-        if(number.lte(new BigInt(Long.MAX_VALUE)) && tester.isPrime(number, PrimeTester.FIRST_PRIMES)) {
-            return true;
+        if(!tester.isPrime(number, PrimeTester.FIRST_PRIMES)) {
+            return false;
         }
         
-        // OK randomly choose a and run tasks concurrently
+        // OK randomly choose `a` and run tasks concurrently
         
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         
@@ -60,7 +59,10 @@ public class PrimeTestRunner<T extends PrimeTester> {
         for(Future<Boolean> future : list) {
             try {
                 boolean res = future.get();
-                if(!res) return false;
+                if(!res) {
+                    executor.shutdown();
+                    return false;
+                }
             } catch (InterruptedException | ExecutionException e) {
                 System.out.println("Execution failed: " + e.getMessage());
                 return false;
