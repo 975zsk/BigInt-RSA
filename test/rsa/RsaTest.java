@@ -101,7 +101,7 @@ public class RsaTest {
     public void testDecryptEncryptTwo() throws InterruptedException, ExecutionException {
         
         BigInt e = new BigInt("7919");
-        Rsa rsa = new Rsa(e, 50);
+        Rsa rsa = new Rsa(e, 100);
         Keys keys = rsa.generateRSAKeys();
         
         // Some random message

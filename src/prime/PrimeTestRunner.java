@@ -48,6 +48,12 @@ public class PrimeTestRunner<T extends PrimeTester> {
         ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
         
         List<Future<Boolean>> list = new ArrayList<>();
+        
+        if(checkFirstPrimes) {
+            // We have already checked the first primes
+            rounds = rounds - PrimeTester.FIRST_PRIMES.length;
+        }
+        
         roundsPerThread = rounds / NUM_THREADS;
         for(int i = 0; i < NUM_THREADS; i++) {
             Callable<Boolean> worker = new Callable<Boolean>() {

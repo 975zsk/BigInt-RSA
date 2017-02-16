@@ -19,8 +19,8 @@ import prime.PrimeTesterMillerRabin;
  */
 public final class Rsa {
     
-    int size;
-    int rounds;
+    int size = 50;
+    int rounds = 20;
     
     PrimeTestRunner<PrimeTesterMillerRabin> millerRabinTester = new PrimeTestRunner<>(new PrimeTesterMillerRabin.Factory());
     PrimeTestRunner<PrimeTesterEuler> eulerTester = new PrimeTestRunner<>(new PrimeTesterEuler.Factory());
@@ -31,10 +31,7 @@ public final class Rsa {
     BigInt d;
     BigInt phiN;
     
-    public Rsa() {
-        size = 50;
-        rounds = 30;
-    }
+    public Rsa() {}
     
     public Rsa(BigInt e, int size) throws InterruptedException, ExecutionException {
         this.e = e;
@@ -83,6 +80,11 @@ public final class Rsa {
             p = pFuture.get();
             Future<BigInt> qFuture = list.get(1);
             q = qFuture.get();
+            while(p.equals(q)) {
+                // Ups p == q
+                // This will probably never happen
+                q = getRandomPrime();
+            }
         } catch (InterruptedException | ExecutionException e) {
             System.out.println("Execution failed: " + e.getMessage());
         } finally {
@@ -123,14 +125,8 @@ public final class Rsa {
     private BigInt getRandomPrime() {
         BigInt a;
         a = Generator.getRandomOdd(size);
-        while(true) {
-            if(eulerTester.isPrime(a, rounds)) {
-                // Now test with Miller-Rabin but without checking first primes 
-                if(millerRabinTester.isPrime(a, rounds, false)) {
-                    break;
-                }
-            }
-            a = Generator.getRandomOdd(size);
+        while(!eulerTester.isPrime(a, rounds, false)) {
+            a = a.add(BigInt.TWO);
         }
         return a;
     }
