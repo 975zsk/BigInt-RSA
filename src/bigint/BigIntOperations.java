@@ -288,9 +288,10 @@ public class BigIntOperations {
     }
     
     private BigInt pow(BigInt x, int e, BigInt m, boolean withMod) {
-        if (e < 0) { throw new IllegalArgumentException("Negative exponents are not supported"); }
-        if (e == 1) { return x; }
-        if (m.lte(ZERO)) { throw new IllegalArgumentException("The modul must be positive, but was " + m.toString() + "."); }
+        if (e < 0) throw new IllegalArgumentException("Negative exponents are not supported");
+        if (e == 1) return x;
+        if (e == 0) return BigInt.ONE;
+        if (m.lte(ZERO)) throw new IllegalArgumentException("The modul must be positive, but was " + m.toString() + ".");
         
         BigInt res = BigInt.ONE;
         if (e == 0) {

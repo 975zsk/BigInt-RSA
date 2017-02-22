@@ -345,6 +345,10 @@ public class BigIntTest {
         b = a.pow(1);
         assertEquals("58786764543534", b.toString());
         
+        a = new BigInt(89759);
+        b = a.pow(0);
+        assertEquals("1", b.toString());
+        
 //        a = new BigInt(52);
 //        b = a.pow(98);
 //        assertEquals("1473423784866237624670098483797258933673033687275246807716133162119807965143050991653453567510224775014037060129581571439829382568929663552438113089945991643900772614144", b.toString());
@@ -554,7 +558,7 @@ public class BigIntTest {
         l = x.egcd(y);
         assertEquals("18", l.gcd.toString());
         assertEquals("1", l.u.toString());
-        assertEquals("-1282580354883709620", l.v.toString());
+        assertEquals("0", l.v.toString());
     }
     
     @Test
