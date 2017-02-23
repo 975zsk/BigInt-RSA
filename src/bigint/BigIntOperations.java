@@ -342,12 +342,12 @@ public class BigIntOperations {
             return powMod(x, e, p);
         }
         if(x.lt(p)) {
-            e = Helper.toInt(new BigInt(e).mod(pLow));
+            e = new BigInt(e).mod(pLow).toInt();
             return powMod(x, e, p);
         }
         if(gcd(x, p).equals(BigInt.ONE)) {
             // gcd(x, p) == 1
-            e = Helper.toInt(new BigInt(e).mod(pLow));
+            e = new BigInt(e).mod(pLow).toInt();
         }
         return powMod(x, e, p);
     }

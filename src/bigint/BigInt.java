@@ -20,6 +20,8 @@ public class BigInt {
     public static BigInt ONE = new BigInt(1);
     public static BigInt TWO = new BigInt(2);
     
+    private static BigInt INTEGER_MAX_VAL = new BigInt(Integer.MAX_VALUE);
+    
     public BigInt() {
         digits = new int[1];
         digits[0] = 0;
@@ -249,5 +251,12 @@ public class BigInt {
     */
     public BigInt abs() {
         return new BigInt(this).setSign(true);
+    }
+    
+    public int toInt() throws Exception {
+        if(gt(INTEGER_MAX_VAL)) {
+            throw new Exception("Cannot convert to Integer. Value is too high.");
+        }
+        return Integer.parseInt(toString());
     }
 }
