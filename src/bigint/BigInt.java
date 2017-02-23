@@ -3,6 +3,7 @@ package bigint;
 /**
  * 
  * @author Jakob Pupke
+ * Base 10 implementation.
  */
 public class BigInt {
     
@@ -31,6 +32,19 @@ public class BigInt {
             digits[i] = Integer.parseInt(stringDigits[i]);
         }
         sign = integer >= 0;
+    }
+    
+    public BigInt(BigInt32 int32) {
+        BigInt val = new BigInt(0);
+        int i, j;
+        j = 0;
+        for(i = int32.digits.length - 1; i >= 0; i--) {
+            BigInt factor = BigInt32.BASE.pow(j);
+            val = val.add(new BigInt(int32.digits[i]).mul(factor));
+            j++;
+        }
+        digits = val.digits;
+        sign = val.sign;
     }
     
     public int getFirstDigit() {
