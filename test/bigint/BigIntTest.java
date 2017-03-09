@@ -412,7 +412,7 @@ public class BigIntTest {
     }
     
     @Test
-    public void testPowModPrim() {
+    public void testPowModPrim() throws Exception {
         BigInt a = new BigInt(6371);
         int e = 839;
         BigInt p = new BigInt(9099469);

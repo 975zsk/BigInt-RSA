@@ -13,9 +13,8 @@ public class BigInt {
     false is negative
     */
     boolean sign = true;
-    BigIntOperations operations = new BigIntOperations();
     
-    public static final int BASE = 10;
+    static final int BASE = 10;
     public static BigInt ZERO = new BigInt();
     public static BigInt ONE = new BigInt(1);
     public static BigInt TWO = new BigInt(2);
@@ -156,55 +155,55 @@ public class BigInt {
     }
     
     public boolean equals(BigInt that) {
-        return operations.equals(this, that);
+        return BigIntOperations.equals(this, that);
     }
     
     public BigInt pow(int e) {
-        return operations.pow(this, e);
+        return BigIntOperations.pow(this, e);
     }
     
     public BigInt powModPrim(int e, BigInt p) throws Exception {
-        return operations.powModPrim(this, e, p);
+        return BigIntOperations.powModPrim(this, e, p);
     }
     
     public BigInt mod(BigInt m) {
-        return operations.mod(this, m);
+        return BigIntOperations.mod(this, m);
     }
     
     public BigInt powMod(int e, BigInt m) {
-        return operations.powMod(this, e, m);
+        return BigIntOperations.powMod(this, e, m);
     }
     
     public BigInt powMod(BigInt e, BigInt m) {
-        return operations.powMod(this, e, m);
+        return BigIntOperations.powMod(this, e, m);
     }
     
     public BigInt karatsuba(BigInt that) {
-        return operations.karatsuba(this, that);
+        return BigIntOperations.karatsuba(this, that);
     }
     
     public BigInt add(BigInt that) {
-        return operations.add(this, that);
+        return BigIntOperations.add(this, that);
     }
     
     public BigInt sub(BigInt that) {
-        return operations.sub(this, that);
+        return BigIntOperations.sub(this, that);
     }
     
     public BigInt mul(BigInt that) {
-        return operations.mul(this, that);
+        return BigIntOperations.mul(this, that);
     }
     
     public DivisionResult div(BigInt that) {
-        return operations.div(this, that);
+        return BigIntOperations.div(this, that);
     }
     
     public BigInt gcd(BigInt that) {
-        return operations.gcd(this, that);
+        return BigIntOperations.gcd(this, that);
     }
     
     public GcdLinComb egcd(BigInt that) {
-        return operations.egcd(this, that);
+        return BigIntOperations.egcd(this, that);
     }
     
     public boolean isEven() {
@@ -212,19 +211,19 @@ public class BigInt {
     }
     
     public boolean gt(BigInt that) {
-        return operations.gt(this, that);
+        return BigIntOperations.gt(this, that);
     }
     
     public boolean lt(BigInt that) {
-        return operations.lt(this, that);
+        return BigIntOperations.lt(this, that);
     }
     
     public boolean gte(BigInt that) {
-        return operations.gte(this, that);
+        return BigIntOperations.gte(this, that);
     }
     
     public boolean lte(BigInt that) {
-        return operations.lte(this, that);
+        return BigIntOperations.lte(this, that);
     }
     
     public boolean isNeg() {

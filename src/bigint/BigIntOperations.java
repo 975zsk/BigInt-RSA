@@ -1,10 +1,11 @@
 package bigint;
 
-import static bigint.BigInt.BASE;
-import static bigint.BigInt.ZERO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static bigint.BigInt.BASE;
+import static bigint.BigInt.ZERO;
 
 /**
  * 
@@ -12,11 +13,11 @@ import java.util.List;
  */
 public class BigIntOperations {
     
-    private final int KARATSUBA_LIMIT = 20;
+    private static int KARATSUBA_LIMIT = 20;
     
     public BigIntOperations() {}
     
-    public BigInt add(BigInt x, BigInt y) {
+    public static BigInt add(BigInt x, BigInt y) {
         if (x.isNeg() && y.isNeg()) {
             return add(x.neg(), y.neg()).neg();
         }
@@ -77,7 +78,7 @@ public class BigIntOperations {
         return c.resize();
     }
     
-    public BigInt sub(BigInt x, BigInt y) {
+    public static BigInt sub(BigInt x, BigInt y) {
         if (x.isNeg() && y.isNeg()) {
             return add(x, y.neg());
         }
@@ -134,7 +135,7 @@ public class BigIntOperations {
         return c.resize();
     }
     
-    public BigInt mul(BigInt x , BigInt y) {
+    public static BigInt mul(BigInt x , BigInt y) {
         if (x.sign != y.sign) {
             return mul(x.setSign(true), y.setSign(true)).neg();
         }
@@ -176,11 +177,11 @@ public class BigIntOperations {
         return Helper.reduceByAddition(products).resize();
     }
     
-    public DivisionResult div(BigInt x, BigInt y) {
+    public static DivisionResult div(BigInt x, BigInt y) {
         return div(x, y, 1);
     }
     
-    private DivisionResult div(BigInt x, BigInt y, int factor) {
+    private static DivisionResult div(BigInt x, BigInt y, int factor) {
         if (y.isZero()) {
             throw new IllegalArgumentException("Division by zero is not allowed");
         }
@@ -246,12 +247,12 @@ public class BigIntOperations {
         return new DivisionResult(res, rest);
     }
     
-    public BigInt mod(BigInt x, BigInt m) {
+    public static BigInt mod(BigInt x, BigInt m) {
         return x.div(m).rest;
     }
     
     // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
-    public BigInt karatsuba(BigInt x, BigInt y) {
+    public static BigInt karatsuba(BigInt x, BigInt y) {
         int size = Math.max(x.digits.length, y.digits.length);
         if (size <= KARATSUBA_LIMIT) {
             return mul(x, y);
@@ -287,7 +288,7 @@ public class BigIntOperations {
         return res1.add(res2).add(d);   
     }
     
-    private BigInt pow(BigInt x, int e, BigInt m, boolean withMod) {
+    private static BigInt pow(BigInt x, int e, BigInt m, boolean withMod) {
         if (e < 0) throw new IllegalArgumentException("Negative exponents are not supported");
         if (e == 1) return x;
         if (e == 0) return BigInt.ONE;
@@ -313,16 +314,16 @@ public class BigIntOperations {
         return res;
     }
     
-    public BigInt pow(BigInt x, int e) {
+    public static BigInt pow(BigInt x, int e) {
         // The module will not be used in the case
         return pow(x, e, BigInt.ONE, false);
     }
     
-    public BigInt powMod(BigInt x, int e, BigInt m) {
+    public static BigInt powMod(BigInt x, int e, BigInt m) {
         return pow(x, e, m, true);
     }
     
-    public BigInt powMod(BigInt a, BigInt n, BigInt m) {
+    public static BigInt powMod(BigInt a, BigInt n, BigInt m) {
         BigInt res = BigInt.ONE;
         BigInt t = new BigInt(a);
         while(n.gt(BigInt.ZERO)) {
@@ -335,7 +336,7 @@ public class BigIntOperations {
         return res;
     }
     
-    public BigInt powModPrim(BigInt x, int e, BigInt p) throws Exception {
+    public static BigInt powModPrim(BigInt x, int e, BigInt p) throws Exception {
         BigInt pLow = p.sub(BigInt.ONE);
         if(new BigInt(e).lt(pLow)) {
             // e < p - 1
@@ -352,7 +353,7 @@ public class BigIntOperations {
         return powMod(x, e, p);
     }
     
-    public BigInt gcd(BigInt x, BigInt y) {
+    public static BigInt gcd(BigInt x, BigInt y) {
         if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
         if (x.isZero()) { return y; }
         if (y.isZero()) { return x; }
@@ -378,7 +379,7 @@ public class BigIntOperations {
         return x;
     }
     
-    public GcdLinComb egcd(BigInt a, BigInt b) {        
+    public static GcdLinComb egcd(BigInt a, BigInt b) {
         
         // TODO: check for valid a, b
         
@@ -412,7 +413,7 @@ public class BigIntOperations {
         return new GcdLinComb(a, u, v);
     }
     
-    public boolean equals(BigInt x, BigInt y) {
+    public static boolean equals(BigInt x, BigInt y) {
         if (x.sign != y.sign || x.digits.length != y.digits.length) {
             return false;
         }
@@ -427,7 +428,7 @@ public class BigIntOperations {
     }
     
     // Returns true if x is greater than y
-    public boolean gt(BigInt x, BigInt y) {
+    public static boolean gt(BigInt x, BigInt y) {
         int xl = x.digits.length;
         int yl = y.digits.length;
         if (xl < yl) {
@@ -450,15 +451,15 @@ public class BigIntOperations {
         return false;
     }
     
-    public boolean lt(BigInt x, BigInt y) {
+    public static boolean lt(BigInt x, BigInt y) {
         return !equals(x, y) && !gt(x, y);
     }
-    
-    boolean gte(BigInt x, BigInt y) {
+
+    static boolean gte(BigInt x, BigInt y) {
         return equals(x, y) || gt(x, y);
     }
 
-    boolean lte(BigInt x, BigInt y) {
+    static boolean lte(BigInt x, BigInt y) {
         return equals(x, y) || lt(x, y);
     }
     
