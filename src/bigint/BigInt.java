@@ -105,6 +105,7 @@ public class BigInt {
         return this;
     }
     
+    // Removes leading zeros
     public BigInt resize() {
         if (isZero()) {
             return this;
@@ -162,7 +163,7 @@ public class BigInt {
         return operations.pow(this, e);
     }
     
-    public BigInt powModPrim(int e, BigInt p) {
+    public BigInt powModPrim(int e, BigInt p) throws Exception {
         return operations.powModPrim(this, e, p);
     }
     

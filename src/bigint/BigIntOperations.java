@@ -335,7 +335,7 @@ public class BigIntOperations {
         return res;
     }
     
-    public BigInt powModPrim(BigInt x, int e, BigInt p) {
+    public BigInt powModPrim(BigInt x, int e, BigInt p) throws Exception {
         BigInt pLow = p.sub(BigInt.ONE);
         if(new BigInt(e).lt(pLow)) {
             // e < p - 1
