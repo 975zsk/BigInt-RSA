@@ -40,7 +40,7 @@ public class PrimeTesterMillerRabin<T extends BigInt> extends PrimeTester<T> {
     
     public static class Factory<E extends BigInt> implements TesterFactory<PrimeTesterMillerRabin, E> {
         public PrimeTesterMillerRabin build(E number, BigIntFactory<E> fact) {
-            return new PrimeTesterMillerRabin(number, fact);
+            return new PrimeTesterMillerRabin<>(number, fact);
         }
     }
     

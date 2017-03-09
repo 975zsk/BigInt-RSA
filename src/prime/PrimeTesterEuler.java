@@ -22,7 +22,7 @@ public class PrimeTesterEuler<T extends BigInt> extends PrimeTester<T> {
 
     public static class Factory<E extends BigInt> implements TesterFactory<PrimeTesterEuler, E> {
         public PrimeTesterEuler build(E number, BigIntFactory<E> fact) {
-            return new PrimeTesterEuler(number, fact);
+            return new PrimeTesterEuler<>(number, fact);
         }
     }
 }

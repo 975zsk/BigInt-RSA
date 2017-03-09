@@ -21,7 +21,7 @@ public class PrimeTesterFermat<T extends BigInt> extends PrimeTester<T> {
     
     public static class Factory<E extends BigInt> implements TesterFactory<PrimeTesterFermat, E> {
         public PrimeTesterFermat build(E number, BigIntFactory<E> fact) {
-            return new PrimeTesterFermat(number, fact);
+            return new PrimeTesterFermat<>(number, fact);
         }
     }
 
