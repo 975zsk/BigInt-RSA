@@ -7,14 +7,14 @@ import static bigint.BigInt.ZERO;
  *
  * @author Jakob Pupke
  */
-public class Helper {
+class Helper {
     
     /*
      * Calculates the quotient by dividing
      * only the first couple of digits
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
-    public static int guess(BigInt dividend, BigInt divisor) {
+    static int guess(BigInt dividend, BigInt divisor) {
         int intDividend;
         int intDivisor = divisor.digits[0];
         if (dividend.digits.length == divisor.digits.length) {
@@ -35,7 +35,7 @@ public class Helper {
     /*
      * Returns the four parts needed for Karatsuba
      */
-    public static BigInt[] getParts(BigInt x, BigInt y) {        
+    static BigInt[] getParts(BigInt x, BigInt y) {
         int size = x.digits.length;
         int halfL = size / 2;
         int halfR = size - halfL;
@@ -70,7 +70,7 @@ public class Helper {
         return res;
     }
     
-    public static BigInt reduceByAddition(BigInt[] bigInts) {
+    static BigInt reduceByAddition(BigInt[] bigInts) {
         if (bigInts.length == 0) {
             // This shouldn't ever be the case, but who knows, 
             // lets be super cautious
@@ -83,7 +83,7 @@ public class Helper {
         return x;
     }
     
-    public static void exchange(BigInt x, BigInt y) {
+    static void exchange(BigInt x, BigInt y) {
         int[] temp = y.digits;
         boolean tempSign = y.sign;
         y.digits = x.digits;

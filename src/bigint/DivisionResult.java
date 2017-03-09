@@ -8,12 +8,7 @@ public class DivisionResult {
     BigInt quotient;
     BigInt rest;
     
-    public DivisionResult() {
-        this.quotient = new BigInt();
-        this.rest = new BigInt();
-    }
-    
-    public DivisionResult(BigInt quotient, BigInt rest) {
+    DivisionResult(BigInt quotient, BigInt rest) {
         this.quotient = quotient;
         this.rest = rest;
     }

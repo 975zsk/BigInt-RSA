@@ -96,7 +96,7 @@ public class BigInt {
         }
     }
     
-    public BigInt shiftLeftBy(int f) {
+    BigInt shiftLeftBy(int f) {
         int newSize = digits.length + f;
         int[] newDigits = new int[newSize];
         System.arraycopy(digits, 0, newDigits, 0, digits.length);
@@ -105,7 +105,7 @@ public class BigInt {
     }
     
     // Removes leading zeros
-    public BigInt resize() {
+    BigInt resize() {
         if (isZero()) {
             return this;
         }
@@ -124,7 +124,7 @@ public class BigInt {
         return this;
     }
     
-    public void extendWithZeros(int targetSize) {
+    void extendWithZeros(int targetSize) {
         if (targetSize <= digits.length) {
             return;
         }
@@ -134,7 +134,7 @@ public class BigInt {
         digits = newDigits;
     }
     
-    public void initializeWithSize(int size) {
+    void initializeWithSize(int size) {
         digits = new int[size];
     }
     
@@ -142,15 +142,15 @@ public class BigInt {
     public String toString() {
         String s = "";
         if (isNeg()) s = s + "-";
-        
-        for(int i = 0; i < digits.length; i++) {
-            s = s + digits[i];
+
+        for (int digit : digits) {
+            s = s + digit;
         }
         
         return s;
     }
     
-    public boolean isZero() {
+    boolean isZero() {
         return digits.length == 1 && digits[0] == 0;
     }
     
@@ -158,11 +158,11 @@ public class BigInt {
         return BigIntOperations.equals(this, that);
     }
     
-    public BigInt pow(int e) {
+    BigInt pow(int e) {
         return BigIntOperations.pow(this, e);
     }
     
-    public BigInt powModPrim(int e, BigInt p) throws Exception {
+    BigInt powModPrim(int e, BigInt p) throws Exception {
         return BigIntOperations.powModPrim(this, e, p);
     }
     
@@ -170,7 +170,7 @@ public class BigInt {
         return BigIntOperations.mod(this, m);
     }
     
-    public BigInt powMod(int e, BigInt m) {
+    BigInt powMod(int e, BigInt m) {
         return BigIntOperations.powMod(this, e, m);
     }
     
@@ -178,7 +178,7 @@ public class BigInt {
         return BigIntOperations.powMod(this, e, m);
     }
     
-    public BigInt karatsuba(BigInt that) {
+    BigInt karatsuba(BigInt that) {
         return BigIntOperations.karatsuba(this, that);
     }
     
@@ -198,7 +198,7 @@ public class BigInt {
         return BigIntOperations.div(this, that);
     }
     
-    public BigInt gcd(BigInt that) {
+    BigInt gcd(BigInt that) {
         return BigIntOperations.gcd(this, that);
     }
     
@@ -226,7 +226,7 @@ public class BigInt {
         return BigIntOperations.lte(this, that);
     }
     
-    public boolean isNeg() {
+    boolean isNeg() {
         return !sign;
     }
 
@@ -237,11 +237,11 @@ public class BigInt {
     /*
      * Returns a new BigInt that is negated
      */
-    public BigInt neg() {
+    BigInt neg() {
         return new BigInt(this).setSign(!sign);
     }
     
-    public BigInt setSign(boolean sign) {
+    BigInt setSign(boolean sign) {
         this.sign = sign;
         return this;
     }
@@ -249,11 +249,11 @@ public class BigInt {
     /*
     Returns a new positive BigInt.
     */
-    public BigInt abs() {
+    BigInt abs() {
         return new BigInt(this).setSign(true);
     }
     
-    public int toInt() throws Exception {
+    int toInt() throws Exception {
         if(gt(INTEGER_MAX_VAL)) {
             throw new Exception("Cannot convert to Integer. Value is too high.");
         }

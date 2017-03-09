@@ -12,12 +12,10 @@ import static bigint.BigInt.ZERO;
  * @author Jakob Pupke
  */
 public class BigIntOperations {
-    
-    private static int KARATSUBA_LIMIT = 20;
-    
+
     public BigIntOperations() {}
     
-    public static BigInt add(BigInt x, BigInt y) {
+    static BigInt add(BigInt x, BigInt y) {
         if (x.isNeg() && y.isNeg()) {
             return add(x.neg(), y.neg()).neg();
         }
@@ -78,7 +76,7 @@ public class BigIntOperations {
         return c.resize();
     }
     
-    public static BigInt sub(BigInt x, BigInt y) {
+    static BigInt sub(BigInt x, BigInt y) {
         if (x.isNeg() && y.isNeg()) {
             return add(x, y.neg());
         }
@@ -135,7 +133,7 @@ public class BigIntOperations {
         return c.resize();
     }
     
-    public static BigInt mul(BigInt x , BigInt y) {
+    static BigInt mul(BigInt x, BigInt y) {
         if (x.sign != y.sign) {
             return mul(x.setSign(true), y.setSign(true)).neg();
         }
@@ -177,7 +175,7 @@ public class BigIntOperations {
         return Helper.reduceByAddition(products).resize();
     }
     
-    public static DivisionResult div(BigInt x, BigInt y) {
+    static DivisionResult div(BigInt x, BigInt y) {
         return div(x, y, 1);
     }
     
@@ -247,13 +245,14 @@ public class BigIntOperations {
         return new DivisionResult(res, rest);
     }
     
-    public static BigInt mod(BigInt x, BigInt m) {
+    static BigInt mod(BigInt x, BigInt m) {
         return x.div(m).rest;
     }
     
     // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
-    public static BigInt karatsuba(BigInt x, BigInt y) {
+    static BigInt karatsuba(BigInt x, BigInt y) {
         int size = Math.max(x.digits.length, y.digits.length);
+        int KARATSUBA_LIMIT = 20;
         if (size <= KARATSUBA_LIMIT) {
             return mul(x, y);
         }
@@ -314,16 +313,16 @@ public class BigIntOperations {
         return res;
     }
     
-    public static BigInt pow(BigInt x, int e) {
+    static BigInt pow(BigInt x, int e) {
         // The module will not be used in the case
         return pow(x, e, BigInt.ONE, false);
     }
     
-    public static BigInt powMod(BigInt x, int e, BigInt m) {
+    static BigInt powMod(BigInt x, int e, BigInt m) {
         return pow(x, e, m, true);
     }
     
-    public static BigInt powMod(BigInt a, BigInt n, BigInt m) {
+    static BigInt powMod(BigInt a, BigInt n, BigInt m) {
         BigInt res = BigInt.ONE;
         BigInt t = new BigInt(a);
         while(n.gt(BigInt.ZERO)) {
@@ -336,7 +335,7 @@ public class BigIntOperations {
         return res;
     }
     
-    public static BigInt powModPrim(BigInt x, int e, BigInt p) throws Exception {
+    static BigInt powModPrim(BigInt x, int e, BigInt p) throws Exception {
         BigInt pLow = p.sub(BigInt.ONE);
         if(new BigInt(e).lt(pLow)) {
             // e < p - 1
@@ -353,7 +352,7 @@ public class BigIntOperations {
         return powMod(x, e, p);
     }
     
-    public static BigInt gcd(BigInt x, BigInt y) {
+    static BigInt gcd(BigInt x, BigInt y) {
         if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
         if (x.isZero()) { return y; }
         if (y.isZero()) { return x; }
@@ -379,7 +378,7 @@ public class BigIntOperations {
         return x;
     }
     
-    public static GcdLinComb egcd(BigInt a, BigInt b) {
+    static GcdLinComb egcd(BigInt a, BigInt b) {
         
         // TODO: check for valid a, b
         

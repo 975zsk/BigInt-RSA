@@ -9,7 +9,7 @@ package bigint;
 public class BigInt32 {
     int[] digits;
     boolean sign = true;
-    public static final BigInt BASE = new BigInt(Integer.MAX_VALUE);
+    static final BigInt BASE = new BigInt(Integer.MAX_VALUE);
     
     public BigInt32(String number) {
         BigInt val = new BigInt(number);
