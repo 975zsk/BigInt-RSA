@@ -75,15 +75,16 @@ public class BigIntDec extends BigInt {
     }
 
     public BigIntDec(int integer) {
-        String[] stringDigits = Integer.toString(integer).split("");
+        sign = integer >= 0;
+        String[] stringDigits = Integer.toString(Math.abs(integer)).split("");
         digits = new int[stringDigits.length];
         for(int i = 0; i < digits.length; i++) {
             digits[i] = Integer.parseInt(stringDigits[i]);
         }
-        sign = integer >= 0;
     }
     
     public BigIntDec(BigInt32 int32) {
+        sign = int32.sign;
         BigIntDec val = new BigIntDec(0);
         int i, j;
         j = 0;
@@ -93,7 +94,6 @@ public class BigIntDec extends BigInt {
             j++;
         }
         digits = val.digits;
-        sign = val.sign;
     }
     
     public int getFirstDigit() {

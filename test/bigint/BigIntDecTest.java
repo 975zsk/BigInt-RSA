@@ -195,17 +195,39 @@ public class BigIntDecTest {
 
     @Test
     public void testIsEven() {
-        BigIntDec instance = new BigIntDec();
+        BigInt instance = new BigIntDec();
         assertTrue(instance.isEven());
         
         instance = new BigIntDec(1);
         assertFalse(instance.isEven());
         
-        instance = new BigIntDec(123154356841L);
+        instance = new BigIntDec("123154356841");
         assertFalse(instance.isEven());
-        
+
         instance = new BigIntDec("-123154356841");
         assertFalse(instance.isEven());
+
+        instance = new BigIntDec("1231543543547656453534434336847");
+        assertFalse(instance.isEven());
+
+        instance = new BigIntDec("-787845678456457845458745895649763");
+        assertFalse(instance.isEven());
+
+        instance = new BigIntDec("3894677784568964545684561");
+        assertFalse(instance.isEven());
+
+        instance = new BigIntDec("-456456784564564564564564564545675678657576456");
+        assertTrue(instance.isEven());
+
+        instance = new BigIntDec("894576476894773595763785634646383358634857222222222222222222222222222");
+        assertTrue(instance.isEven());
+
+        instance = new BigIntDec("6476947896734957349753475574555555555555555555588888888888888888888888888888888");
+        assertTrue(instance.isEven());
+
+        instance = new BigIntDec("647694789673495734975347557455555555555555555558888888888888888888884");
+        assertTrue(instance.isEven());
+
     }
 
     @Test

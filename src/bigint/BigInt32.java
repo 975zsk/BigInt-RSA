@@ -8,7 +8,7 @@ package bigint;
  */
 public class BigInt32 extends BigInt {
     // This is only used for converting a string of digits to BigInt32
-    static final BigIntDec BASE = new BigIntDec(Integer.MAX_VALUE);
+    static final BigIntDec BASE = new BigIntDec(Integer.MAX_VALUE - 1);
     private static BigIntOperations<BigInt32> operations = new BigIntOperations<>(new BigInt32.Factory());
 
     public static class Factory implements BigIntFactory<BigInt32> {
@@ -62,6 +62,14 @@ public class BigInt32 extends BigInt {
     }
     
     public BigInt32(String number) {
+        int length = number.length();
+        if (length >= 1 && number.charAt(0) == '-') {
+            sign = false;
+            number = number.substring(1);
+        }
+        else if (length == 0) {
+            number = "0";
+        }
         BigIntDec val = new BigIntDec(number);
         DivisionResult<BigIntDec> divResult;
         BigIntDec rem;
