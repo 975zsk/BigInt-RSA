@@ -10,7 +10,7 @@ class Helper<T extends BigInt> {
 
     private BigIntFactory<T> factory;
 
-    public Helper(BigIntFactory<T> fact) {
+    Helper(BigIntFactory<T> fact) {
         factory = fact;
     }
     
@@ -19,7 +19,7 @@ class Helper<T extends BigInt> {
      * only the first couple of digits
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
-    public int guess(T dividend, T divisor) {
+    int guess(T dividend, T divisor) {
         int intDividend;
         int intDivisor = divisor.digits[0];
         if (dividend.digits.length == divisor.digits.length) {
@@ -40,7 +40,7 @@ class Helper<T extends BigInt> {
     /*
      * Returns the four parts needed for Karatsuba
      */
-    public T[] getParts(T x, T y) {
+    T[] getParts(T x, T y) {
         int size = x.digits.length;
         int halfL = size / 2;
         int halfR = size - halfL;
@@ -75,7 +75,7 @@ class Helper<T extends BigInt> {
         return res;
     }
     
-    public T reduceByAddition(T[] bigIntDecs) {
+    T reduceByAddition(T[] bigIntDecs) {
         if (bigIntDecs.length == 0) {
             // This shouldn't ever be the case, but who knows, 
             // lets be super cautious
@@ -88,7 +88,7 @@ class Helper<T extends BigInt> {
         return x;
     }
     
-    public void exchange(T x, T y) {
+    void exchange(T x, T y) {
         int[] temp = y.digits;
         boolean tempSign = y.sign;
         y.digits = x.digits;

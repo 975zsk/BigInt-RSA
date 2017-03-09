@@ -7,7 +7,6 @@ package bigint;
 public abstract class BigInt {
     int[] digits;
     boolean sign = true;
-    static BigIntDec INTEGER_MAX_VAL = new BigIntDec(Integer.MAX_VALUE);
 
     public BigInt() {
         digits = new int[1];
@@ -135,7 +134,7 @@ public abstract class BigInt {
     }
 
     int toInt() throws Exception {
-        if(gt(INTEGER_MAX_VAL)) {
+        if(gt(new BigIntDec(Integer.MAX_VALUE))) {
             throw new Exception("Cannot convert to Integer. Value is too high.");
         }
         return Integer.parseInt(toString());

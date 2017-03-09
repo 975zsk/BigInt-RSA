@@ -8,14 +8,12 @@ package bigint;
  */
 public class BigInt32 extends BigInt {
     // This is only used for converting a string of digits to BigInt32
-    public static final BigIntDec BASE = new BigIntDec(Integer.MAX_VALUE);
+    static final BigIntDec BASE = new BigIntDec(Integer.MAX_VALUE);
     private static BigIntOperations<BigInt32> operations = new BigIntOperations<>(new BigInt32.Factory());
 
     public static class Factory implements BigIntFactory<BigInt32> {
 
-        public static BigInt32 ZERO = new BigInt32();
-        public static BigInt32 ONE = new BigInt32(1);
-        public static BigInt32 TWO = new BigInt32(2);
+        static BigInt32 ONE = new BigInt32(1);
 
         @Override
         public BigInt32 build() {

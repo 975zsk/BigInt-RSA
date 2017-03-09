@@ -10,8 +10,7 @@ import java.util.List;
  * @author Jakob Pupke
  */
 public class BigIntOperations<T extends BigInt> {
-    
-    private final int KARATSUBA_LIMIT = 20;
+
     private BigIntFactory<T> factory;
     private Helper<T> helper;
     private T ZERO;
@@ -89,7 +88,7 @@ public class BigIntOperations<T extends BigInt> {
         return (T) c.resize();
     }
 
-    public T sub(T x, T y) {
+    T sub(T x, T y) {
         if (x.isNeg() && y.isNeg()) {
             return add(x, (T) y.neg());
         }
@@ -146,7 +145,7 @@ public class BigIntOperations<T extends BigInt> {
         return (T) c.resize();
     }
     
-    public T mul(T x , T y) {
+    T mul(T x, T y) {
         if (x.sign != y.sign) {
             return (T) mul((T) x.setSign(true), (T) y.setSign(true)).neg();
         }
@@ -189,7 +188,7 @@ public class BigIntOperations<T extends BigInt> {
         return (T) helper.reduceByAddition(products).resize();
     }
     
-    public DivisionResult div(T x, T y) {
+    DivisionResult div(T x, T y) {
         return div(x, y, 1);
     }
 
@@ -259,13 +258,14 @@ public class BigIntOperations<T extends BigInt> {
         return new DivisionResult(res, rest);
     }
     
-    public T mod(T x, T m) {
+    T mod(T x, T m) {
         return (T) div(x, m).rest;
     }
     
     // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
-    public T karatsuba(T x, T y) {
+    T karatsuba(T x, T y) {
         int size = Math.max(x.digits.length, y.digits.length);
+        int KARATSUBA_LIMIT = 20;
         if (size <= KARATSUBA_LIMIT) {
             return mul(x, y);
         }
@@ -323,16 +323,16 @@ public class BigIntOperations<T extends BigInt> {
         return res;
     }
     
-    public T pow(T x, int e) {
+    T pow(T x, int e) {
         // The module will not be used in the case
         return pow(x, e, ONE, false);
     }
     
-    public T powMod(T x, int e, T m) {
+    T powMod(T x, int e, T m) {
         return pow(x, e, m, true);
     }
     
-    public T powMod(T a, T n, T m) {
+    T powMod(T a, T n, T m) {
         T res = ONE;
         T t = factory.build(a);
         while(gt(n, ZERO)) {
@@ -345,7 +345,7 @@ public class BigIntOperations<T extends BigInt> {
         return res;
     }
     
-    public T powModPrim(T x, int e, T p) throws Exception {
+    T powModPrim(T x, int e, T p) throws Exception {
         T pLow = sub(p, ONE);
         if(lt(factory.build(e), pLow)) {
             // e < p - 1
@@ -362,7 +362,7 @@ public class BigIntOperations<T extends BigInt> {
         return powMod(x, e, p);
     }
     
-    public T gcd(T x, T y) {
+    T gcd(T x, T y) {
         if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
         if (x.isZero()) { return y; }
         if (y.isZero()) { return x; }
@@ -388,7 +388,7 @@ public class BigIntOperations<T extends BigInt> {
         return x;
     }
     
-    public GcdLinComb egcd(T a, T b) {
+    GcdLinComb egcd(T a, T b) {
         
         // TODO: check for valid a, b
         

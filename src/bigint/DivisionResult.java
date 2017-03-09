@@ -8,12 +8,7 @@ public class DivisionResult<T extends BigInt> {
     T quotient;
     T rest;
     
-    public DivisionResult(BigIntFactory<T> fact) {
-        this.quotient = fact.build();
-        this.rest = fact.build();
-    }
-    
-    public DivisionResult(T quotient, T rest) {
+    DivisionResult(T quotient, T rest) {
         this.quotient = quotient;
         this.rest = rest;
     }
