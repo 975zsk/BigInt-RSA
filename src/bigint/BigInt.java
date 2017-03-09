@@ -21,7 +21,7 @@ public abstract class BigInt {
     public int getSize() {
         return digits.length;
     }
-    protected abstract BigIntOperations getOps();
+    protected abstract BigIntOperations<BigInt> getOps();
 
     boolean isZero() {
         return digits.length == 1 && digits[0] == 0;
