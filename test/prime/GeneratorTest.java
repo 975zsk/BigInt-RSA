@@ -1,7 +1,8 @@
 package prime;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
 import java.util.concurrent.ThreadLocalRandom;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class GeneratorTest {
     public void testGet() {
         int size = getRandSize();
         int i;
-        BigInt rand;
+        BigIntDec rand;
         for(i = 0; i < ROUNDS; i++) {
             rand = Generator.getRandom(size);
             assertNotEquals(rand.getFirstDigit(), 0);
@@ -48,7 +49,7 @@ public class GeneratorTest {
     public void testGetOdd() {
         int size = getRandSize();
         int i;
-        BigInt rand;
+        BigIntDec rand;
         for(i = 0; i < ROUNDS; i++) {
             rand = Generator.getRandomOdd(size);
             assertFalse(rand.isEven());
@@ -59,10 +60,10 @@ public class GeneratorTest {
     @Test
     public void testSizeOne() {
         int i;
-        BigInt rand;
+        BigIntDec rand;
         for(i = 0; i < ROUNDS; i++) {
             rand = Generator.getRandom(1);
-            assertTrue(rand.lt(new BigInt(10)) && rand.gte(BigInt.ZERO));
+            assertTrue(rand.lt(new BigIntDec(10)) && rand.gte(BigIntDec.ZERO));
         }
     }
 }

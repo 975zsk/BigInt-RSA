@@ -5,17 +5,17 @@
  */
 package rsa;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
 
 /**
  *
  * @author jacke
  */
 public class PublicKey {
-    BigInt e;
-    BigInt n;
+    BigIntDec e;
+    BigIntDec n;
     
-    public PublicKey(BigInt e, BigInt n) {
+    public PublicKey(BigIntDec e, BigIntDec n) {
         this.e = e;
         this.n = n;
     }

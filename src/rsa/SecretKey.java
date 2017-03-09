@@ -5,19 +5,19 @@
  */
 package rsa;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
 
 /**
  *
  * @author jacke
  */
 public class SecretKey {
-    BigInt p;
-    BigInt q;
-    BigInt d;
-    BigInt n;
+    BigIntDec p;
+    BigIntDec q;
+    BigIntDec d;
+    BigIntDec n;
     
-    public SecretKey(BigInt p, BigInt q, BigInt d, BigInt n) {
+    public SecretKey(BigIntDec p, BigIntDec q, BigIntDec d, BigIntDec n) {
         this.p = p;
         this.q = q;
         this.d = d;

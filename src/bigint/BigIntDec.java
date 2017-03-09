@@ -5,7 +5,7 @@ package bigint;
  * @author Jakob Pupke
  * Base 10 implementation.
  */
-public class BigInt {
+public class BigIntDec {
     
     int[] digits;
     /*
@@ -16,18 +16,18 @@ public class BigInt {
     BigIntOperations operations = new BigIntOperations();
     
     public static final int BASE = 10;
-    public static BigInt ZERO = new BigInt();
-    public static BigInt ONE = new BigInt(1);
-    public static BigInt TWO = new BigInt(2);
+    public static BigIntDec ZERO = new BigIntDec();
+    public static BigIntDec ONE = new BigIntDec(1);
+    public static BigIntDec TWO = new BigIntDec(2);
     
-    private static BigInt INTEGER_MAX_VAL = new BigInt(Integer.MAX_VALUE);
+    private static BigIntDec INTEGER_MAX_VAL = new BigIntDec(Integer.MAX_VALUE);
     
-    public BigInt() {
+    public BigIntDec() {
         digits = new int[1];
         digits[0] = 0;
     }
     
-    public BigInt(int integer) {
+    public BigIntDec(int integer) {
         String[] stringDigits = Integer.toString(integer).split("");
         digits = new int[stringDigits.length];
         for(int i = 0; i < digits.length; i++) {
@@ -36,13 +36,13 @@ public class BigInt {
         sign = integer >= 0;
     }
     
-    public BigInt(BigInt32 int32) {
-        BigInt val = new BigInt(0);
+    public BigIntDec(BigInt32 int32) {
+        BigIntDec val = new BigIntDec(0);
         int i, j;
         j = 0;
         for(i = int32.digits.length - 1; i >= 0; i--) {
-            BigInt factor = BigInt32.BASE.pow(j);
-            val = val.add(new BigInt(int32.digits[i]).mul(factor));
+            BigIntDec factor = BigInt32.BASE.pow(j);
+            val = val.add(new BigIntDec(int32.digits[i]).mul(factor));
             j++;
         }
         digits = val.digits;
@@ -57,7 +57,7 @@ public class BigInt {
         return digits.length;
     }
     
-    public BigInt(long integer) {
+    public BigIntDec(long integer) {
         String[] stringDigits = Long.toString(integer).split("");
         digits = new int[stringDigits.length];
         for(int i = 0; i < digits.length; i++) {
@@ -66,17 +66,17 @@ public class BigInt {
         sign = integer >= 0;
     }
     
-    public BigInt(int[] digits) {
+    public BigIntDec(int[] digits) {
         this.digits = digits;
     }
    
     // Return a copy of that
-    public BigInt(BigInt that) {
+    public BigIntDec(BigIntDec that) {
         this.digits = that.digits;
         this.sign = that.sign;
     }
     
-    public BigInt(String num) {
+    public BigIntDec(String num) {
         int length = num.length();
         if (length >= 1 && num.charAt(0) == '-') {
             sign = false;
@@ -97,7 +97,7 @@ public class BigInt {
         }
     }
     
-    public BigInt shiftLeftBy(int f) {
+    public BigIntDec shiftLeftBy(int f) {
         int newSize = digits.length + f;
         int[] newDigits = new int[newSize];
         System.arraycopy(digits, 0, newDigits, 0, digits.length);
@@ -106,7 +106,7 @@ public class BigInt {
     }
     
     // Removes leading zeros
-    public BigInt resize() {
+    public BigIntDec resize() {
         if (isZero()) {
             return this;
         }
@@ -155,55 +155,55 @@ public class BigInt {
         return digits.length == 1 && digits[0] == 0;
     }
     
-    public boolean equals(BigInt that) {
+    public boolean equals(BigIntDec that) {
         return operations.equals(this, that);
     }
     
-    public BigInt pow(int e) {
+    public BigIntDec pow(int e) {
         return operations.pow(this, e);
     }
     
-    public BigInt powModPrim(int e, BigInt p) throws Exception {
+    public BigIntDec powModPrim(int e, BigIntDec p) throws Exception {
         return operations.powModPrim(this, e, p);
     }
     
-    public BigInt mod(BigInt m) {
+    public BigIntDec mod(BigIntDec m) {
         return operations.mod(this, m);
     }
     
-    public BigInt powMod(int e, BigInt m) {
+    public BigIntDec powMod(int e, BigIntDec m) {
         return operations.powMod(this, e, m);
     }
     
-    public BigInt powMod(BigInt e, BigInt m) {
+    public BigIntDec powMod(BigIntDec e, BigIntDec m) {
         return operations.powMod(this, e, m);
     }
     
-    public BigInt karatsuba(BigInt that) {
+    public BigIntDec karatsuba(BigIntDec that) {
         return operations.karatsuba(this, that);
     }
     
-    public BigInt add(BigInt that) {
+    public BigIntDec add(BigIntDec that) {
         return operations.add(this, that);
     }
     
-    public BigInt sub(BigInt that) {
+    public BigIntDec sub(BigIntDec that) {
         return operations.sub(this, that);
     }
     
-    public BigInt mul(BigInt that) {
+    public BigIntDec mul(BigIntDec that) {
         return operations.mul(this, that);
     }
     
-    public DivisionResult div(BigInt that) {
+    public DivisionResult div(BigIntDec that) {
         return operations.div(this, that);
     }
     
-    public BigInt gcd(BigInt that) {
+    public BigIntDec gcd(BigIntDec that) {
         return operations.gcd(this, that);
     }
     
-    public GcdLinComb egcd(BigInt that) {
+    public GcdLinComb egcd(BigIntDec that) {
         return operations.egcd(this, that);
     }
     
@@ -211,19 +211,19 @@ public class BigInt {
         return (digits[digits.length - 1] & 1) == 0;
     }
     
-    public boolean gt(BigInt that) {
+    public boolean gt(BigIntDec that) {
         return operations.gt(this, that);
     }
     
-    public boolean lt(BigInt that) {
+    public boolean lt(BigIntDec that) {
         return operations.lt(this, that);
     }
     
-    public boolean gte(BigInt that) {
+    public boolean gte(BigIntDec that) {
         return operations.gte(this, that);
     }
     
-    public boolean lte(BigInt that) {
+    public boolean lte(BigIntDec that) {
         return operations.lte(this, that);
     }
     
@@ -236,22 +236,22 @@ public class BigInt {
     }
     
     /*
-     * Returns a new BigInt that is negated
+     * Returns a new BigIntDec that is negated
      */
-    public BigInt neg() {
-        return new BigInt(this).setSign(!sign);
+    public BigIntDec neg() {
+        return new BigIntDec(this).setSign(!sign);
     }
     
-    public BigInt setSign(boolean sign) {
+    public BigIntDec setSign(boolean sign) {
         this.sign = sign;
         return this;
     }
     
     /*
-    Returns a new positive BigInt.
+    Returns a new positive BigIntDec.
     */
-    public BigInt abs() {
-        return new BigInt(this).setSign(true);
+    public BigIntDec abs() {
+        return new BigIntDec(this).setSign(true);
     }
     
     public int toInt() throws Exception {

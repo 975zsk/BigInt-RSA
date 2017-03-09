@@ -1,7 +1,8 @@
 package prime;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
 import java.util.concurrent.ExecutionException;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -23,25 +24,25 @@ public class PrimeTesterFermatTest extends PrimeTesterTest {
     @Test
     public void pseudo() {
         // These are not Prime Numbers, but Fermat fails for these bases (a)
-        BigInt prime = new BigInt(117);
+        BigIntDec prime = new BigIntDec(117);
         assertTrue(tester.isPrime(prime, new int[] {8, 44, 53, 64, 73, 109}));
         
-        prime = new BigInt(123);
+        prime = new BigIntDec(123);
         assertTrue(tester.isPrime(prime, new int[] {40, 83}));
         
-        prime = new BigInt(183);
+        prime = new BigIntDec(183);
         assertTrue(tester.isPrime(prime, new int[] {62, 121}));
         
-        prime = new BigInt(203);
+        prime = new BigIntDec(203);
         assertTrue(tester.isPrime(prime, new int[] {57, 146}));
         
-        prime = new BigInt(244);
+        prime = new BigIntDec(244);
         assertTrue(tester.isPrime(prime, new int[] {13, 169}));
         
-        prime = new BigInt(2735);
+        prime = new BigIntDec(2735);
         assertTrue(tester.isPrime(prime, new int[] {546, 2189}));
         
-        prime = new BigInt(4984);
+        prime = new BigIntDec(4984);
         assertTrue(tester.isPrime(prime, new int[] {
             121, 345, 401, 449, 625, 809, 865, 1313, 1425, 1521,
             1577, 1873, 2025, 2137, 2241, 2353, 2585, 2969, 3193,
@@ -49,7 +50,7 @@ public class PrimeTesterFermatTest extends PrimeTesterTest {
             4617, 4673, 4873, 4897
         }));
         
-        prime = new BigInt(4991);
+        prime = new BigIntDec(4991);
         assertTrue(tester.isPrime(prime, new int[] {
             139, 461, 622, 643, 666, 783, 804, 965, 988, 1149,
             1287, 1310, 1427, 1611, 1954, 2092, 2255, 2414, 2416,
@@ -58,10 +59,10 @@ public class PrimeTesterFermatTest extends PrimeTesterTest {
             4852
         }));
         
-        prime = new BigInt(4997);
+        prime = new BigIntDec(4997);
         assertTrue(tester.isPrime(prime, new int[] {1842, 3155}));
         
-        prime = new BigInt(2737);
+        prime = new BigIntDec(2737);
         assertTrue(tester.isPrime(prime, new int[] {
             22, 24, 45, 47, 93, 114, 116, 137, 139, 160, 162, 183,
             185, 206, 208, 229, 254, 275, 277, 298, 300, 321, 344,

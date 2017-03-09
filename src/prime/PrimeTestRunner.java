@@ -1,6 +1,7 @@
 package prime;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -24,11 +25,11 @@ public class PrimeTestRunner<T extends PrimeTester> {
         this.fact = fact;
     }
     
-    public boolean isPrime(BigInt number, int rounds) {
+    public boolean isPrime(BigIntDec number, int rounds) {
         return isPrime(number, rounds, true);
     }
     
-    public boolean isPrime(BigInt number, int rounds, boolean checkFirstPrimes) {
+    public boolean isPrime(BigIntDec number, int rounds, boolean checkFirstPrimes) {
         this.tester = fact.build(number);
         
         if(!tester.passesPreTest()) {
@@ -83,7 +84,7 @@ public class PrimeTestRunner<T extends PrimeTester> {
         return true;
     }
     
-    public boolean isPrime(BigInt number, int[] bases) {
+    public boolean isPrime(BigIntDec number, int[] bases) {
         this.tester = fact.build(number);
         return tester.isPrime(number, bases);
     }

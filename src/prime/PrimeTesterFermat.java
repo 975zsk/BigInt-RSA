@@ -1,6 +1,6 @@
 package prime;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
 
 /**
  *
@@ -8,18 +8,18 @@ import bigint.BigInt;
  */
 public class PrimeTesterFermat extends PrimeTester {
 
-    public PrimeTesterFermat(BigInt n) {
+    public PrimeTesterFermat(BigIntDec n) {
         super(n);
         exponent = nMinusOne;
     }
 
     @Override
-    protected boolean condition(BigInt result) {
-        return !result.equals(BigInt.ONE);
+    protected boolean condition(BigIntDec result) {
+        return !result.equals(BigIntDec.ONE);
     }
     
     public static class Factory implements TesterFactory<PrimeTesterFermat> {
-        public PrimeTesterFermat build(BigInt number) {
+        public PrimeTesterFermat build(BigIntDec number) {
             return new PrimeTesterFermat(number);
         }
     }

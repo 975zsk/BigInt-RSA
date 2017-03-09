@@ -1,6 +1,6 @@
 package prime;
 
-import bigint.BigInt;
+import bigint.BigIntDec;
 
 /**
  *
@@ -8,37 +8,37 @@ import bigint.BigInt;
  */
 public class PrimeTesterMillerRabin extends PrimeTester {
     
-    BigInt s;
+    BigIntDec s;
 
-    public PrimeTesterMillerRabin(BigInt n) {
+    public PrimeTesterMillerRabin(BigIntDec n) {
         super(n);
         // calculate d and s
-        BigInt d = new BigInt(nMinusOne);
-        s = BigInt.ZERO;
+        BigIntDec d = new BigIntDec(nMinusOne);
+        s = BigIntDec.ZERO;
         while(d.isEven()) {
-            d = d.div(BigInt.TWO).getQuotient();
-            s = s.add(BigInt.ONE);
+            d = d.div(BigIntDec.TWO).getQuotient();
+            s = s.add(BigIntDec.ONE);
         }
         exponent = d;
     }
 
     @Override
-    protected boolean condition(BigInt result) {
-        if(result.equals(BigInt.ONE))
+    protected boolean condition(BigIntDec result) {
+        if(result.equals(BigIntDec.ONE))
             return false;
-        while(s.gt(BigInt.ZERO)) {
+        while(s.gt(BigIntDec.ZERO)) {
             if(result.equals(nMinusOne))
                 return false;
-            result = result.mul(BigInt.TWO).mod(n);
-            if(result.equals(BigInt.ONE))
+            result = result.mul(BigIntDec.TWO).mod(n);
+            if(result.equals(BigIntDec.ONE))
                 return true;
-            s = s.sub(BigInt.ONE);
+            s = s.sub(BigIntDec.ONE);
         }
         return true;
     }
     
     public static class Factory implements TesterFactory<PrimeTesterMillerRabin> {
-        public PrimeTesterMillerRabin build(BigInt number) {
+        public PrimeTesterMillerRabin build(BigIntDec number) {
             return new PrimeTesterMillerRabin(number);
         }
     }

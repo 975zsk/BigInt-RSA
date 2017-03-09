@@ -9,15 +9,15 @@ package bigint;
 public class BigInt32 {
     int[] digits;
     boolean sign = true;
-    public static final BigInt BASE = new BigInt(Integer.MAX_VALUE);
+    public static final BigIntDec BASE = new BigIntDec(Integer.MAX_VALUE);
     
     public BigInt32(String number) {
-        BigInt val = new BigInt(number);
+        BigIntDec val = new BigIntDec(number);
         DivisionResult divResult;
-        BigInt rem;
+        BigIntDec rem;
         digits = new int[getRequiredSize(number)];
         int i = digits.length - 1;
-        while(val.gt(BigInt.ZERO)) {
+        while(val.gt(BigIntDec.ZERO)) {
             divResult = val.div(BASE);
             rem = divResult.rest;
             val = divResult.quotient;
@@ -28,8 +28,8 @@ public class BigInt32 {
     
     @Override
     public String toString() {
-        // convert to a BASE 10 BigInt
-        BigInt base10 = new BigInt(this);
+        // convert to a BASE 10 BigIntDec
+        BigIntDec base10 = new BigIntDec(this);
         return base10.toString();
     }
     

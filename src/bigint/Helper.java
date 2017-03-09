@@ -1,7 +1,7 @@
 package bigint;
 
-import static bigint.BigInt.BASE;
-import static bigint.BigInt.ZERO;
+import static bigint.BigIntDec.BASE;
+import static bigint.BigIntDec.ZERO;
 
 /**
  *
@@ -14,7 +14,7 @@ public class Helper {
      * only the first couple of digits
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
-    public static int guess(BigInt dividend, BigInt divisor) {
+    public static int guess(BigIntDec dividend, BigIntDec divisor) {
         int intDividend;
         int intDivisor = divisor.digits[0];
         if (dividend.digits.length == divisor.digits.length) {
@@ -24,10 +24,10 @@ public class Helper {
             intDividend = dividend.digits[0] * BASE + dividend.digits[1];
         }
         int res = intDividend / intDivisor;
-        BigInt e = new BigInt(res);
+        BigIntDec e = new BigIntDec(res);
         while(e.mul(divisor).gt(dividend)) {
             res--;
-            e = new BigInt(res);
+            e = new BigIntDec(res);
         }
         return res;
     } 
@@ -35,7 +35,7 @@ public class Helper {
     /*
      * Returns the four parts needed for Karatsuba
      */
-    public static BigInt[] getParts(BigInt x, BigInt y) {        
+    public static BigIntDec[] getParts(BigIntDec x, BigIntDec y) {
         int size = x.digits.length;
         int halfL = size / 2;
         int halfR = size - halfL;
@@ -60,30 +60,30 @@ public class Helper {
             }
         }
         
-        BigInt[] res = new BigInt[4];
+        BigIntDec[] res = new BigIntDec[4];
         
-        res[0] = new BigInt(xH);
-        res[1] = new BigInt(xL);
-        res[2] = new BigInt(yH);
-        res[3] = new BigInt(yL);
+        res[0] = new BigIntDec(xH);
+        res[1] = new BigIntDec(xL);
+        res[2] = new BigIntDec(yH);
+        res[3] = new BigIntDec(yL);
         
         return res;
     }
     
-    public static BigInt reduceByAddition(BigInt[] bigInts) {
-        if (bigInts.length == 0) {
+    public static BigIntDec reduceByAddition(BigIntDec[] bigIntDecs) {
+        if (bigIntDecs.length == 0) {
             // This shouldn't ever be the case, but who knows, 
             // lets be super cautious
             return ZERO;
         }
-        BigInt x = bigInts[0];
-        for(int i = 1; i < bigInts.length; i++) {
-            x = x.add(bigInts[i]);
+        BigIntDec x = bigIntDecs[0];
+        for(int i = 1; i < bigIntDecs.length; i++) {
+            x = x.add(bigIntDecs[i]);
         }
         return x;
     }
     
-    public static void exchange(BigInt x, BigInt y) {
+    public static void exchange(BigIntDec x, BigIntDec y) {
         int[] temp = y.digits;
         boolean tempSign = y.sign;
         y.digits = x.digits;

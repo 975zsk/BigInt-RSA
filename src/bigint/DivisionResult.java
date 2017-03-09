@@ -5,15 +5,15 @@ package bigint;
  * @author Jakob Pupke
  */
 public class DivisionResult {
-    BigInt quotient;
-    BigInt rest;
+    BigIntDec quotient;
+    BigIntDec rest;
     
     public DivisionResult() {
-        this.quotient = new BigInt();
-        this.rest = new BigInt();
+        this.quotient = new BigIntDec();
+        this.rest = new BigIntDec();
     }
     
-    public DivisionResult(BigInt quotient, BigInt rest) {
+    public DivisionResult(BigIntDec quotient, BigIntDec rest) {
         this.quotient = quotient;
         this.rest = rest;
     }
@@ -23,7 +23,7 @@ public class DivisionResult {
         return this;
     }
     
-    public BigInt getQuotient() {
+    public BigIntDec getQuotient() {
         return quotient;
     }
 }
