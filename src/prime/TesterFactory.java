@@ -5,12 +5,12 @@
  */
 package prime;
 
-import bigint.BigIntDec;
+import bigint.BigIntFactory;
 
 /**
  *
- * @author jacke
+ * @author Jakob Pupke
  */
-public interface TesterFactory<T> {
-    T build(BigIntDec number);
+public interface TesterFactory<T, E> {
+    T build(E number, BigIntFactory<E> fact);
 }

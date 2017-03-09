@@ -1,31 +1,36 @@
 package rsa;
 
 import bigint.BigIntDec;
-import java.util.concurrent.ExecutionException;
-import static org.junit.Assert.assertEquals;
-
+import bigint.BigIntFactory;
 import org.junit.Test;
 import prime.Generator;
+
+import java.util.concurrent.ExecutionException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Jakob Pupke
  */
 public class RsaTest {
+
+    BigIntFactory<BigIntDec> factory = new BigIntDec.Factory();
+    Generator<BigIntDec> generator = new Generator<>(new BigIntDec.Factory());
     
     @Test
-    public void testRsa() {
+    public void testRsa() throws ExecutionException, InterruptedException {
         BigIntDec p = new BigIntDec("167988556341760475137");
         BigIntDec q = new BigIntDec("3560841906445833920513");
         BigIntDec e = new BigIntDec(5);
-        Rsa rsa = new Rsa(p, q, e);
+        Rsa rsa = new Rsa(p, q, e, factory);
         assertEquals(rsa.d.toString(), "239272276490031101741495168957570710555853");
         assertEquals(rsa.phiN.toString(), "598180691225077754353737922393926776389632");
         
         p = new BigIntDec("7455602825647884208337395736200454918783366342657");
         q = new BigIntDec("4659775785220018543264560743076778192897");
         e = new BigIntDec(65537);
-        rsa = new Rsa(p, q, e);
+        rsa = new Rsa(p, q, e, factory);
         assertEquals(rsa.d.toString(), "11262063260827444975785094392604245467823982685616016111446723766766056794189524545503233");
         assertEquals(rsa.phiN.toString(), "34741437511171958643352682099698961413263372712036566151842030383739565268100676400971776");
     }
@@ -35,7 +40,7 @@ public class RsaTest {
         BigIntDec p = new BigIntDec("7455602825647884208337395736200454918783366342657");
         BigIntDec q = new BigIntDec("4659775785220018543264560743076778192897");
         BigIntDec e = new BigIntDec("65537");
-        Rsa rsa = new Rsa(p, q, e);
+        Rsa rsa = new Rsa(p, q, e, factory);
         assertEquals(rsa.d.toString(), "11262063260827444975785094392604245467823982685616016111446723766766056794189524545503233");
         assertEquals(rsa.phiN.toString(), "34741437511171958643352682099698961413263372712036566151842030383739565268100676400971776");
         
@@ -59,7 +64,7 @@ public class RsaTest {
         BigIntDec p = new BigIntDec("167988556341760475137");
         BigIntDec q = new BigIntDec("3560841906445833920513");
         BigIntDec e = new BigIntDec(5);
-        Rsa rsa = new Rsa(p, q, e);
+        Rsa rsa = new Rsa(p, q, e, factory);
         assertEquals(rsa.d.toString(), "239272276490031101741495168957570710555853");
         assertEquals(rsa.phiN.toString(), "598180691225077754353737922393926776389632");
         
@@ -83,7 +88,7 @@ public class RsaTest {
         BigIntDec p = new BigIntDec(5);
         BigIntDec q = new BigIntDec(17);
         BigIntDec e = new BigIntDec(43);
-        Rsa rsa = new Rsa(p,q,e);
+        Rsa rsa = new Rsa(p,q,e, factory);
         assertEquals(rsa.d.toString(), "3");
         Keys keys = rsa.generateRSAKeys();
         assertEquals("85", keys.publicKey.n.toString());
@@ -102,11 +107,11 @@ public class RsaTest {
     public void testDecryptEncryptTwo() throws InterruptedException, ExecutionException {
         
         BigIntDec e = new BigIntDec("7919");
-        Rsa rsa = new Rsa(e, 100);
+        Rsa rsa = new Rsa(e, 100, factory);
         Keys keys = rsa.generateRSAKeys();
         
         // Some random message
-        BigIntDec plain = Generator.getRandom(50);
+        BigIntDec plain = generator.getRandom(50);
         BigIntDec cipher = Rsa.encrypt(keys.publicKey, plain);
         BigIntDec deciphered = Rsa.decrypt(keys.secretKey, cipher);
         assertEquals(plain.toString(), deciphered.toString());

@@ -1,19 +1,20 @@
 package prime;
 
 import bigint.BigIntDec;
+import org.junit.Test;
+
 import java.util.concurrent.ExecutionException;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterFermatTest extends PrimeTesterTest {
+public class PrimeTesterFermatTest extends PrimeTesterTest<PrimeTesterFermat, BigIntDec> {
 
     public PrimeTesterFermatTest() {
-        super(new PrimeTesterFermat.Factory());
+        super(new PrimeTesterFermat.Factory(), new BigIntDec.Factory());
     }
     
     @Test

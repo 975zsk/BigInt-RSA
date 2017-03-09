@@ -4,16 +4,16 @@ package bigint;
  *
  * @author Jakob Pupke
  */
-public class DivisionResult {
-    BigIntDec quotient;
-    BigIntDec rest;
+public class DivisionResult<T extends BigInt> {
+    T quotient;
+    T rest;
     
-    public DivisionResult() {
-        this.quotient = new BigIntDec();
-        this.rest = new BigIntDec();
+    public DivisionResult(BigIntFactory<T> fact) {
+        this.quotient = fact.build();
+        this.rest = fact.build();
     }
     
-    public DivisionResult(BigIntDec quotient, BigIntDec rest) {
+    public DivisionResult(T quotient, T rest) {
         this.quotient = quotient;
         this.rest = rest;
     }
@@ -23,7 +23,7 @@ public class DivisionResult {
         return this;
     }
     
-    public BigIntDec getQuotient() {
+    public T getQuotient() {
         return quotient;
     }
 }

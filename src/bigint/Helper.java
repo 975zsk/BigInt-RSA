@@ -1,33 +1,38 @@
 package bigint;
 
-import static bigint.BigIntDec.BASE;
-import static bigint.BigIntDec.ZERO;
+import java.lang.reflect.Array;
 
 /**
  *
  * @author Jakob Pupke
  */
-public class Helper {
+class Helper<T extends BigInt> {
+
+    private BigIntFactory<T> factory;
+
+    public Helper(BigIntFactory<T> fact) {
+        factory = fact;
+    }
     
     /*
      * Calculates the quotient by dividing
      * only the first couple of digits
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
-    public static int guess(BigIntDec dividend, BigIntDec divisor) {
+    public int guess(T dividend, T divisor) {
         int intDividend;
         int intDivisor = divisor.digits[0];
         if (dividend.digits.length == divisor.digits.length) {
             intDividend = dividend.digits[0];
         }
         else {
-            intDividend = dividend.digits[0] * BASE + dividend.digits[1];
+            intDividend = dividend.digits[0] * factory.getBase() + dividend.digits[1];
         }
         int res = intDividend / intDivisor;
-        BigIntDec e = new BigIntDec(res);
+        T e = factory.build(res);
         while(e.mul(divisor).gt(dividend)) {
             res--;
-            e = new BigIntDec(res);
+            e = factory.build(res);
         }
         return res;
     } 
@@ -35,7 +40,7 @@ public class Helper {
     /*
      * Returns the four parts needed for Karatsuba
      */
-    public static BigIntDec[] getParts(BigIntDec x, BigIntDec y) {
+    public T[] getParts(T x, T y) {
         int size = x.digits.length;
         int halfL = size / 2;
         int halfR = size - halfL;
@@ -60,30 +65,30 @@ public class Helper {
             }
         }
         
-        BigIntDec[] res = new BigIntDec[4];
-        
-        res[0] = new BigIntDec(xH);
-        res[1] = new BigIntDec(xL);
-        res[2] = new BigIntDec(yH);
-        res[3] = new BigIntDec(yL);
+        T[] res = (T[]) Array.newInstance(x.getClass(), 4);
+
+        res[0] = factory.build(xH);
+        res[1] = factory.build(xL);
+        res[2] = factory.build(yH);
+        res[3] = factory.build(yL);
         
         return res;
     }
     
-    public static BigIntDec reduceByAddition(BigIntDec[] bigIntDecs) {
+    public T reduceByAddition(T[] bigIntDecs) {
         if (bigIntDecs.length == 0) {
             // This shouldn't ever be the case, but who knows, 
             // lets be super cautious
-            return ZERO;
+            return factory.getZero();
         }
-        BigIntDec x = bigIntDecs[0];
+        T x = bigIntDecs[0];
         for(int i = 1; i < bigIntDecs.length; i++) {
-            x = x.add(bigIntDecs[i]);
+            x = (T) x.add(bigIntDecs[i]);
         }
         return x;
     }
     
-    public static void exchange(BigIntDec x, BigIntDec y) {
+    public void exchange(T x, T y) {
         int[] temp = y.digits;
         boolean tempSign = y.sign;
         y.digits = x.digits;
