@@ -106,10 +106,6 @@ public class BigIntDec extends BigInt {
         digits = val.digits;
     }
     
-    public int getFirstDigit() {
-        return digits[0];
-    }
-    
     public BigIntDec(long integer) {
         String[] stringDigits = Long.toString(integer).split("");
         digits = new int[stringDigits.length];

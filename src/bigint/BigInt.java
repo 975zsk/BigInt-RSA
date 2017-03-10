@@ -155,6 +155,10 @@ public abstract class BigInt {
         return sign;
     }
 
+    public int getFirstDigit() {
+        return digits[0];
+    }
+
     public abstract BigInt neg();
     public abstract BigInt abs();
 

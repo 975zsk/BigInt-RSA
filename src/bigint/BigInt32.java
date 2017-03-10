@@ -4,7 +4,8 @@ package bigint;
  *
  * @author Jakob Pupke
  * Base 2^32 implementation. Its not really 2^32 because in Java there are
- * no unsigned numbers. Integer.MAX_VALUE is 2^31 - 1.
+ * no unsigned numbers. Integer.MAX_VALUE is 2^31 - 1 which is an odd number
+ * so we have to substract 1 --> Integer.MAX_VALUE - 1 is the base
  */
 public class BigInt32 extends BigInt {
     static final int BASE = Integer.MAX_VALUE - 1;
@@ -15,6 +16,7 @@ public class BigInt32 extends BigInt {
     public static class Factory implements BigIntFactory<BigInt32> {
 
         static BigInt32 ONE = new BigInt32(1);
+        public static BigInt32 ZERO = new BigInt32();
 
         @Override
         public BigInt32 build() {
