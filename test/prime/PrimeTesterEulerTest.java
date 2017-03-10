@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class PrimeTesterEulerTest extends PrimeTesterTest<PrimeTesterEuler, BigIntDec> {
 
     public PrimeTesterEulerTest() {
-        super(new PrimeTesterEuler.Factory(), new BigIntDec.Factory());
+        super(new PrimeTesterEuler.Factory<>(), new BigIntDec.Factory());
     }
     
     @Test

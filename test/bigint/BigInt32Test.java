@@ -7,7 +7,11 @@ import static org.junit.Assert.*;
  *
  * @author Jakob Pupke
  */
-public class BigInt32Test {
+public class BigInt32Test extends BigIntTest<BigInt32> {
+
+    public BigInt32Test() {
+        super(new BigInt32.Factory());
+    }
     
     @Test
     public void testConstructorAndToString() {

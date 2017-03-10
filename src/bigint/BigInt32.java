@@ -7,8 +7,9 @@ package bigint;
  * no unsigned numbers. Integer.MAX_VALUE is 2^31 - 1.
  */
 public class BigInt32 extends BigInt {
+    static final int BASE = Integer.MAX_VALUE - 1;
     // This is only used for converting a string of digits to BigInt32
-    static final BigIntDec BASE = new BigIntDec(Integer.MAX_VALUE - 1);
+    static final BigIntDec XBASE = new BigIntDec(BASE);
     private static BigIntOperations<BigInt32> operations = new BigIntOperations<>(new BigInt32.Factory());
 
     public static class Factory implements BigIntFactory<BigInt32> {
@@ -42,7 +43,7 @@ public class BigInt32 extends BigInt {
 
         @Override
         public int getBase() {
-            return 10;
+            return BigInt32.BASE;
         }
 
         @Override
@@ -76,7 +77,7 @@ public class BigInt32 extends BigInt {
         digits = new int[getRequiredSize(number)];
         int i = digits.length - 1;
         while(val.gt(BigIntDec.Factory.ZERO)) {
-            divResult = val.div(BASE);
+            divResult = val.div(XBASE);
             rem = divResult.rest;
             val = divResult.quotient;
             digits[i] = Integer.parseInt(rem.toString());
@@ -119,9 +120,7 @@ public class BigInt32 extends BigInt {
       */
     private int getRequiredSize(String decimalNumber) {
         int length = decimalNumber.length();
-        // IMAO haha. This is probably far from correct.. but quite accurate.
-        // TODO: Test this for decimal numbers with more than 300 digits
-        return length / 10 + String.valueOf(length).length();
+        return (int) Math.ceil((Math.log(10) / Math.log(BigInt32.BASE)) * length);
     }
 
     @Override

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class PrimeTesterFermatTest extends PrimeTesterTest<PrimeTesterFermat, BigIntDec> {
 
     public PrimeTesterFermatTest() {
-        super(new PrimeTesterFermat.Factory(), new BigIntDec.Factory());
+        super(new PrimeTesterFermat.Factory<>(), new BigIntDec.Factory());
     }
     
     @Test

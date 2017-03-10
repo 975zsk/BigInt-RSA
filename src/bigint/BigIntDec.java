@@ -89,7 +89,7 @@ public class BigIntDec extends BigInt {
         int i, j;
         j = 0;
         for(i = int32.digits.length - 1; i >= 0; i--) {
-            BigIntDec factor = (BigIntDec) BigInt32.BASE.pow(j);
+            BigIntDec factor = (BigIntDec) BigInt32.XBASE.pow(j);
             val = (BigIntDec) val.add(new BigIntDec(int32.digits[i]).mul(factor));
             j++;
         }
