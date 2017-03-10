@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class BigIntOperations<T extends BigInt> {
 
+    private int GCD_MAX_LENGTH_DIFF;
     private BigIntFactory<T> factory;
     private Helper<T> helper;
     private T ZERO;
@@ -25,6 +26,7 @@ public class BigIntOperations<T extends BigInt> {
         ONE = fact.getOne();
         TWO = fact.getTwo();
         BASE = fact.getBase();
+        GCD_MAX_LENGTH_DIFF = fact.getGcdMaxLengthDiff();
     }
     
     public T add(T x, T y) {
@@ -59,10 +61,10 @@ public class BigIntOperations<T extends BigInt> {
         int xIdx = x.digits.length - 1;
         int yIdx = y.digits.length - 1;
         int cIdx = c.digits.length - 1;
-        int carry = 0;
+        long carry = 0;
         int xSummand;
         int ySummand;
-        int sum;
+        long sum;
         
         while(cIdx >= 0) {
             if (xIdx < 0) {
@@ -77,9 +79,9 @@ public class BigIntOperations<T extends BigInt> {
             else {
                 ySummand = y.digits[yIdx];
             }
-            sum = xSummand + ySummand + carry;
+            sum = carry + xSummand + ySummand;
             carry = sum / BASE;
-            c.digits[cIdx] = sum % BASE;
+            c.digits[cIdx] = (int) (sum % BASE);
             xIdx--;
             yIdx--;
             cIdx--;
@@ -154,8 +156,10 @@ public class BigIntOperations<T extends BigInt> {
            later they will be combined by addition */
         //T[] products = new T[x.digits.length];
         T[] products = (T[]) Array.newInstance(x.getClass(), x.digits.length);
-        int prod, k;
-        int step = 0, carry = 0;
+        int k;
+        long prod;
+        long carry = 0;
+        int step = 0;
         for(int i = x.digits.length - 1; i >= 0; i--) {
             /*
             On each step make a new BigIntDec object and add it to
@@ -166,14 +170,14 @@ public class BigIntOperations<T extends BigInt> {
             k = c.digits.length - 1 - step;
             
             for(int j = y.digits.length - 1; j >= 0; j--) {
-                prod = x.digits[i] * y.digits[j] + carry;
-                c.digits[k] = prod % BASE;
+                prod = (long) x.digits[i] * y.digits[j] + carry;
+                c.digits[k] = (int) (prod % BASE);
                 carry = prod / BASE;
                 k--;
             }
             
             if (carry != 0) {
-                c.digits[0] = carry;
+                c.digits[0] = Math.toIntExact(carry);
                 carry = 0;
             }
             
@@ -292,12 +296,10 @@ public class BigIntOperations<T extends BigInt> {
         T e2 = sub(e1, a);
         T e = sub(e2, d);
         
-        boolean g = a.isNeg() || d.isNeg() || e.isNeg();
+        a.shiftLeftBy(2*baseExponent);
+        e.shiftLeftBy(baseExponent);
         
-        T res1 = (T) a.shiftLeftBy(2*baseExponent);
-        T res2 = (T) e.shiftLeftBy(baseExponent);
-        
-        return add(add(res1, res2), d);
+        return add(add(a, e), d);
     }
     
     private T pow(T x, int e, T m, boolean withMod) {
@@ -370,20 +372,22 @@ public class BigIntOperations<T extends BigInt> {
         if (y.isNeg()) { y.sign = true; }
         
         // What is a good limit here??
-        if(Math.abs(x.digits.length - y.digits.length) > 5) {
+        if(Math.abs(x.digits.length - y.digits.length) > GCD_MAX_LENGTH_DIFF) {
             if(x.lt(y)) {
                 helper.exchange(x, y);
             }
             x = mod(x, y);
             //return gcd(x.mod(y), y);
         }
-        
+        int steps = 0;
         while(y.gt(ZERO)) {
+            steps++;
             if (y.lt(x)) {
                 helper.exchange(x, y);
             }
             y = sub(y, x);
         }
+        System.out.println(steps);
         
         return x;
     }

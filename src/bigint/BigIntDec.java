@@ -35,6 +35,11 @@ public class BigIntDec extends BigInt {
         }
 
         @Override
+        public BigIntDec build(long i) {
+            return new BigIntDec(i);
+        }
+
+        @Override
         public BigIntDec build(int[] digits) {
             return new BigIntDec(digits);
         }
@@ -62,6 +67,11 @@ public class BigIntDec extends BigInt {
         @Override
         public BigIntDec getTwo() {
             return new BigIntDec(2);
+        }
+
+        @Override
+        public int getGcdMaxLengthDiff() {
+            return 5;
         }
     }
 

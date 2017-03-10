@@ -15,9 +15,6 @@ public abstract class BigIntTest<T extends BigInt> {
         factory = fact;
     }
 
-    /**
-     * Test of toString method, of class BigIntDec.
-     */
     @Test
     public void testToString() {
         String num = "9021484789375297489789478923565365828490";
@@ -26,13 +23,6 @@ public abstract class BigIntTest<T extends BigInt> {
         String result = instance.toString();
         assertEquals(num, result);
         
-    }
-    
-    @Test
-    public void testExtendWithZeros() {
-        T x = factory.build(1234);
-        x.extendWithZeros(10);
-        assertEquals("0000001234", x.toString());
     }
     
     @Test
@@ -97,6 +87,12 @@ public abstract class BigIntTest<T extends BigInt> {
         c = (T) x.add(y);
         
         assertEquals("1", c.toString());
+
+        x = factory.build(Integer.MAX_VALUE - 1);
+        y = factory.build(Integer.MAX_VALUE - 1);
+        c = (T) x.add(y);
+
+        assertEquals(Long.toString(((long) Integer.MAX_VALUE - 1) + Integer.MAX_VALUE - 1), c.toString());
     }
     
     @Test
@@ -162,6 +158,11 @@ public abstract class BigIntTest<T extends BigInt> {
         b = factory.build(49);
         c = (T) a.sub(b);
         assertEquals("9951", c.toString());
+
+        a = factory.build("543506203945812017181853335600");
+        b = factory.build("245096536056936046682799600");
+        c = (T) a.sub(b);
+        assertEquals("543261107409755081135170536000", c.toString());
     }
     
     @Test
@@ -294,6 +295,14 @@ public abstract class BigIntTest<T extends BigInt> {
         a = factory.build("-2344324");
         b = factory.build("-2344324");
         assertFalse(a.gt(b));
+
+        a = factory.build("843843856945931838738388543854388483737554886486859795645995964384388437532737173737735858832853853228383287327373271");
+        b = factory.getZero();
+        assertTrue(a.gt(b));
+
+        a = factory.build("-843843856945931838738388543854388483737554886486859795645995964384388437532737173737735858832853853228383287327373271");
+        b = factory.getZero();
+        assertFalse(a.gt(b));
     }
     
     @Test
@@ -329,26 +338,6 @@ public abstract class BigIntTest<T extends BigInt> {
         a = factory.build("-467567");
         b = factory.build("-522432");
         assertFalse(a.lt(b));
-    }
-    
-    
-    @Test
-    public void testResize() {
-        int[] a = new int[5];
-        a[0] = 0;
-        a[1] = 0;
-        a[2] = 1;
-        a[3] = 2;
-        a[4] = 3;
-        T x = factory.build(a);
-        assertEquals("123", x.resize().toString());
-    }
-    
-    @Test
-    public void testShiftLeftBy() {
-        T a = factory.build(567);
-        T b = (T) a.shiftLeftBy(4);
-        assertEquals("5670000", b.toString());
     }
     
     @Test
@@ -478,23 +467,23 @@ public abstract class BigIntTest<T extends BigInt> {
         T a = factory.build("245096536056936046682799600");
         T b = factory.build("543506203945812017181853335600");
         assertEquals("4176646315657200", a.gcd(b).toString());
-        
+
         a = factory.build("76979890");
         b = factory.build("945430");
         assertEquals("10", a.gcd(b).toString());
-        
+
         a = factory.build("75");
         b = factory.build("-20");
         assertEquals("5", a.gcd(b).toString());
-        
+
         a = factory.build("-75");
         b = factory.build("20");
         assertEquals("5", a.gcd(b).toString());
-        
+
         a = factory.build("457658");
         b = factory.build();
         assertEquals("457658", a.gcd(b).toString());
-        
+
         a = factory.build("9659658865765");
         b = factory.build("253254353464566");
         assertEquals("1", a.gcd(b).toString());
@@ -505,10 +494,7 @@ public abstract class BigIntTest<T extends BigInt> {
         a = factory.build("37346456345735676576532454364574574568651311243324325132543464656451");
         b = factory.build("843843856945931838738388543854388483737554886486859795645995964384388437532737173737735858832853853228383287327373271");
         assertEquals("1", a.gcd(b).toString());
-        
-        a = factory.build("245096536056936046682799600");
-        b = factory.build("543506203945812017181853335600");
-        assertEquals("4176646315657200", a.gcd(b).toString());
+
     }
     
     @Test

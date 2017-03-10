@@ -20,21 +20,21 @@ class Helper<T extends BigInt> {
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
     int guess(T dividend, T divisor) {
-        int intDividend;
+        long intDividend;
         int intDivisor = divisor.digits[0];
         if (dividend.digits.length == divisor.digits.length) {
             intDividend = dividend.digits[0];
         }
         else {
-            intDividend = dividend.digits[0] * factory.getBase() + dividend.digits[1];
+            intDividend = (long) dividend.digits[0] * factory.getBase() + dividend.digits[1];
         }
-        int res = intDividend / intDivisor;
+        long res = intDividend / intDivisor;
         T e = factory.build(res);
         while(e.mul(divisor).gt(dividend)) {
             res--;
             e = factory.build(res);
         }
-        return res;
+        return Math.toIntExact(res);
     } 
     
     /*

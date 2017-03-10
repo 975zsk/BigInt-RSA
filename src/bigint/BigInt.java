@@ -140,12 +140,11 @@ public abstract class BigInt {
         return Integer.parseInt(toString());
     }
 
-    BigInt shiftLeftBy(int f) {
+    void shiftLeftBy(int f) {
         int newSize = digits.length + f;
         int[] newDigits = new int[newSize];
         System.arraycopy(digits, 0, newDigits, 0, digits.length);
         digits = newDigits;
-        return this;
     }
 
     public boolean isNeg() {

@@ -32,6 +32,11 @@ public class BigInt32 extends BigInt {
         }
 
         @Override
+        public BigInt32 build(long i) {
+            return new BigInt32(i);
+        }
+
+        @Override
         public BigInt32 build(int[] digits) {
             return new BigInt32(digits);
         }
@@ -44,6 +49,11 @@ public class BigInt32 extends BigInt {
         @Override
         public int getBase() {
             return BigInt32.BASE;
+        }
+
+        @Override
+        public int getGcdMaxLengthDiff() {
+            return 1;
         }
 
         @Override
@@ -85,6 +95,24 @@ public class BigInt32 extends BigInt {
         }
     }
 
+    public BigInt32(int number) {
+        this((long) number);
+    }
+
+
+    public BigInt32(long number) {
+        sign = number >= 0;
+        long rest;
+        digits = new int[getRequiredSize(Long.toString(number))];
+        int i = digits.length - 1;
+        while(number > 0) {
+            rest = number % BigInt32.BASE;
+            number = number / BigInt32.BASE;
+            digits[i] = (int) rest;
+            i--;
+        }
+    }
+
     public BigInt32(int[] digits) {
         this.digits = digits;
     }
@@ -96,11 +124,6 @@ public class BigInt32 extends BigInt {
     @Override
     protected BigIntOperations getOps() {
         return operations;
-    }
-
-    public BigInt32(int number) {
-        digits = new int[1];
-        digits[0] = number;
     }
 
     public BigInt32(BigInt32 that) {

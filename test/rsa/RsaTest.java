@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class RsaTest {
 
     BigIntFactory<BigIntDec> factory = new BigIntDec.Factory();
-    Generator<BigIntDec> generator = new Generator<>(new BigIntDec.Factory());
+    Generator<BigIntDec> generator = new Generator<>(factory);
     
     @Test
     public void testRsa() throws ExecutionException, InterruptedException {
