@@ -1,10 +1,12 @@
 package prime;
 
-import bigint.BigInt;
-import java.util.concurrent.ThreadLocalRandom;
+import bigint.BigIntDec;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.concurrent.ThreadLocalRandom;
+
 import static org.junit.Assert.*;
 
 /**
@@ -16,6 +18,7 @@ public class GeneratorTest {
     static int ROUNDS = 1000;
     static int MIN_SIZE = 1000;
     static int MAX_SIZE = 2000;
+    Generator<BigIntDec> generator = new Generator(new BigIntDec.Factory());
     
     public GeneratorTest() {}
     
@@ -35,9 +38,9 @@ public class GeneratorTest {
     public void testGet() {
         int size = getRandSize();
         int i;
-        BigInt rand;
+        BigIntDec rand;
         for(i = 0; i < ROUNDS; i++) {
-            rand = Generator.getRandom(size);
+            rand = generator.getRandom(size);
             assertNotEquals(rand.getFirstDigit(), 0);
             assertEquals(rand.getSize(), size);
             size = getRandSize();
@@ -48,9 +51,9 @@ public class GeneratorTest {
     public void testGetOdd() {
         int size = getRandSize();
         int i;
-        BigInt rand;
+        BigIntDec rand;
         for(i = 0; i < ROUNDS; i++) {
-            rand = Generator.getRandomOdd(size);
+            rand = generator.getRandomOdd(size);
             assertFalse(rand.isEven());
             size = getRandSize();
         }
@@ -59,10 +62,10 @@ public class GeneratorTest {
     @Test
     public void testSizeOne() {
         int i;
-        BigInt rand;
+        BigIntDec rand;
         for(i = 0; i < ROUNDS; i++) {
-            rand = Generator.getRandom(1);
-            assertTrue(rand.lt(new BigInt(10)) && rand.gte(BigInt.ZERO));
+            rand = generator.getRandom(1);
+            assertTrue(rand.lt(new BigIntDec(10)) && rand.gte(BigIntDec.Factory.ZERO));
         }
     }
 }

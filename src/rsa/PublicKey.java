@@ -9,7 +9,7 @@ import bigint.BigInt;
 
 /**
  *
- * @author jacke
+ * @author Jakob Pupke
  */
 public class PublicKey {
     BigInt e;

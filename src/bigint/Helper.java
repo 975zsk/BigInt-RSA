@@ -1,41 +1,46 @@
 package bigint;
 
-import static bigint.BigInt.BASE;
-import static bigint.BigInt.ZERO;
+import java.lang.reflect.Array;
 
 /**
  *
  * @author Jakob Pupke
  */
-class Helper {
+class Helper<T extends BigInt> {
+
+    private BigIntFactory<T> factory;
+
+    Helper(BigIntFactory<T> fact) {
+        factory = fact;
+    }
     
     /*
      * Calculates the quotient by dividing
      * only the first couple of digits
      * Note: divisor.length + 1 >= dividend.length >= divisor.length
      */
-    static int guess(BigInt dividend, BigInt divisor) {
-        int intDividend;
+    int guess(T dividend, T divisor) {
+        long intDividend;
         int intDivisor = divisor.digits[0];
         if (dividend.digits.length == divisor.digits.length) {
             intDividend = dividend.digits[0];
         }
         else {
-            intDividend = dividend.digits[0] * BASE + dividend.digits[1];
+            intDividend = (long) dividend.digits[0] * factory.getBase() + dividend.digits[1];
         }
-        int res = intDividend / intDivisor;
-        BigInt e = new BigInt(res);
+        long res = intDividend / intDivisor;
+        T e = factory.build(res);
         while(e.mul(divisor).gt(dividend)) {
             res--;
-            e = new BigInt(res);
+            e = factory.build(res);
         }
-        return res;
+        return Math.toIntExact(res);
     } 
     
     /*
      * Returns the four parts needed for Karatsuba
      */
-    static BigInt[] getParts(BigInt x, BigInt y) {
+    T[] getParts(T x, T y) {
         int size = x.digits.length;
         int halfL = size / 2;
         int halfR = size - halfL;
@@ -60,30 +65,30 @@ class Helper {
             }
         }
         
-        BigInt[] res = new BigInt[4];
-        
-        res[0] = new BigInt(xH);
-        res[1] = new BigInt(xL);
-        res[2] = new BigInt(yH);
-        res[3] = new BigInt(yL);
+        T[] res = (T[]) Array.newInstance(x.getClass(), 4);
+
+        res[0] = factory.build(xH);
+        res[1] = factory.build(xL);
+        res[2] = factory.build(yH);
+        res[3] = factory.build(yL);
         
         return res;
     }
     
-    static BigInt reduceByAddition(BigInt[] bigInts) {
-        if (bigInts.length == 0) {
+    T reduceByAddition(T[] bigIntDecs) {
+        if (bigIntDecs.length == 0) {
             // This shouldn't ever be the case, but who knows, 
             // lets be super cautious
-            return ZERO;
+            return factory.getZero();
         }
-        BigInt x = bigInts[0];
-        for(int i = 1; i < bigInts.length; i++) {
-            x = x.add(bigInts[i]);
+        T x = bigIntDecs[0];
+        for(int i = 1; i < bigIntDecs.length; i++) {
+            x = (T) x.add(bigIntDecs[i]);
         }
         return x;
     }
     
-    static void exchange(BigInt x, BigInt y) {
+    void exchange(T x, T y) {
         int[] temp = y.digits;
         boolean tempSign = y.sign;
         y.digits = x.digits;

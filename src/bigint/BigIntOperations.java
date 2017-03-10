@@ -1,56 +1,70 @@
 package bigint;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static bigint.BigInt.BASE;
-import static bigint.BigInt.ZERO;
 
 /**
  * 
  * @author Jakob Pupke
  */
-public class BigIntOperations {
+public class BigIntOperations<T extends BigInt> {
 
-    public BigIntOperations() {}
+    private int GCD_MAX_LENGTH_DIFF;
+    private BigIntFactory<T> factory;
+    private Helper<T> helper;
+    private T ZERO;
+    private T ONE;
+    private T TWO;
+    private int BASE;
+
+    public BigIntOperations(BigIntFactory<T> fact) {
+        factory = fact;
+        helper = new Helper<>(factory);
+        ZERO = fact.getZero();
+        ONE = fact.getOne();
+        TWO = fact.getTwo();
+        BASE = fact.getBase();
+        GCD_MAX_LENGTH_DIFF = fact.getGcdMaxLengthDiff();
+    }
     
-    static BigInt add(BigInt x, BigInt y) {
+    public T add(T x, T y) {
         if (x.isNeg() && y.isNeg()) {
-            return add(x.neg(), y.neg()).neg();
+            return (T) add((T) x.neg(), (T) y.neg()).neg();
         }
         if (x.isNeg() && y.isPos()) {
-            BigInt absX = x.abs();
-            if (absX.gt(y)) {
-                return sub(x.neg(), y).neg();
+            T absX = (T) x.abs();
+            if (gt(absX, y)) {
+                return (T) sub((T) x.neg(), y).neg();
             }
-            if (absX.lt(y)) {
-                return sub(y, x.neg());
+            if (lt(absX, y)) {
+                return sub(y, (T) x.neg());
             }
             return ZERO; // -100 + 100
         }
         if (x.isPos() && y.isNeg()) {
-            BigInt absY = y.abs();
-            if (x.gt(absY)) {
-                return sub(x, y.neg());
+            T absY = (T) y.abs();
+            if (gt(x, absY)) {
+                return sub(x, (T) y.neg());
             }
-            if (x.lt(absY)) {
-                return sub(y.neg(), x).neg();
+            if (lt(x, absY)) {
+                return (T) sub((T) y.neg(), x).neg();
             }
             return ZERO; // 100 + -100
         }
         
         // OK both BigInts are positive -> Normal addition
         
-        BigInt c = new BigInt();
+        T c = factory.build();
         c.initializeWithSize(Math.max(x.digits.length, y.digits.length) + 1);
         int xIdx = x.digits.length - 1;
         int yIdx = y.digits.length - 1;
         int cIdx = c.digits.length - 1;
-        int carry = 0;
+        long carry = 0;
         int xSummand;
         int ySummand;
-        int sum;
+        long sum;
         
         while(cIdx >= 0) {
             if (xIdx < 0) {
@@ -65,35 +79,35 @@ public class BigIntOperations {
             else {
                 ySummand = y.digits[yIdx];
             }
-            sum = xSummand + ySummand + carry;
+            sum = carry + xSummand + ySummand;
             carry = sum / BASE;
-            c.digits[cIdx] = sum % BASE;
+            c.digits[cIdx] = (int) (sum % BASE);
             xIdx--;
             yIdx--;
             cIdx--;
         }
         
-        return c.resize();
+        return (T) c.resize();
     }
-    
-    static BigInt sub(BigInt x, BigInt y) {
+
+    T sub(T x, T y) {
         if (x.isNeg() && y.isNeg()) {
-            return add(x, y.neg());
+            return add(x, (T) y.neg());
         }
         if (x.isNeg() && y.isPos()) {
-            return add(x.neg(), y).neg();
+            return (T) add((T) x.neg(), y).neg();
         }
         if (x.isPos() && y.isNeg()) {
-            return add(x, y.neg());
+            return add(x, (T) y.neg());
         }
         
         // both positive
         
-        if (x.lt(y)) {
-            return sub(y, x).neg();
+        if (lt(x, y)) {
+            return (T) sub(y, x).neg();
         }
         
-        BigInt c = new BigInt();
+        T c = factory.build();
         c.initializeWithSize(Math.max(x.digits.length, y.digits.length) + 1);
         
         int xIdx = x.digits.length - 1;
@@ -129,102 +143,105 @@ public class BigIntOperations {
             yIdx--;
             cIdx--;
         }
-        
-        return c.resize();
+
+        return (T) c.resize();
     }
     
-    static BigInt mul(BigInt x, BigInt y) {
+    T mul(T x, T y) {
         if (x.sign != y.sign) {
-            return mul(x.setSign(true), y.setSign(true)).neg();
+            return (T) mul((T) x.setSign(true), (T) y.setSign(true)).neg();
         }
-        BigInt c;
+        T c;
         /* store intermediary results in this array.
            later they will be combined by addition */
-        BigInt[] products = new BigInt[x.digits.length];
-        int prod, k;
-        int step = 0, carry = 0;
+        //T[] products = new T[x.digits.length];
+        T[] products = (T[]) Array.newInstance(x.getClass(), x.digits.length);
+        int k;
+        long prod;
+        long carry = 0;
+        int step = 0;
         for(int i = x.digits.length - 1; i >= 0; i--) {
             /*
-            On each step make a new BigInt object and add it to
+            On each step make a new BigIntDec object and add it to
             the products array
             */
-            c = new BigInt();
+            c = factory.build();
             c.initializeWithSize(y.digits.length + 1 + step);
             k = c.digits.length - 1 - step;
             
             for(int j = y.digits.length - 1; j >= 0; j--) {
-                prod = x.digits[i] * y.digits[j] + carry;
-                c.digits[k] = prod % BASE;
+                prod = (long) x.digits[i] * y.digits[j] + carry;
+                c.digits[k] = (int) (prod % BASE);
                 carry = prod / BASE;
                 k--;
             }
             
             if (carry != 0) {
-                c.digits[0] = carry;
+                c.digits[0] = Math.toIntExact(carry);
                 carry = 0;
             }
             
             step++;
-            products[i] = new BigInt(c.resize());
+            products[i] = factory.build((T) c.resize());
         }
         // requires Java 8;
-        // Stream<BigInt> productsStream = Arrays.stream(products);
-        // Optional<BigInt> res = productsStream.reduce(BigInt::add);
+        // Stream<BigIntDec> productsStream = Arrays.stream(products);
+        // Optional<BigIntDec> res = productsStream.reduce(BigIntDec::add);
         
         // works in Java 7/6
-        return Helper.reduceByAddition(products).resize();
+        return (T) helper.reduceByAddition(products).resize();
     }
     
-    static DivisionResult div(BigInt x, BigInt y) {
+    DivisionResult div(T x, T y) {
         return div(x, y, 1);
     }
-    
-    private static DivisionResult div(BigInt x, BigInt y, int factor) {
+
+    private DivisionResult div(T x, T y, int factor) {
         if (y.isZero()) {
             throw new IllegalArgumentException("Division by zero is not allowed");
         }
         
         if (x.sign != y.sign) {
-            return div(x.abs(), y.abs(), factor).neg();
+            return div((T) x.abs(), (T) y.abs(), factor).neg();
         }
         
-        if (y.gt(x)) {
+        if (gt(y, x)) {
             return new DivisionResult(ZERO, x);
         }
         if (y.equals(x)) {
-            return new DivisionResult(BigInt.ONE, ZERO);
+            return new DivisionResult(ONE, ZERO);
         }
-        if (y.equals(BigInt.ONE)) {
+        if (y.equals(ONE)) {
             return new DivisionResult(x, ZERO);
         }
         
         if (y.digits[0] < BASE / 2) {
             // So the Schätzfunktion (guess function!?) will work
             factor = BASE / (y.digits[0] + 1);
-            BigInt d = new BigInt(factor);
-            return div(x.mul(d), y.mul(d), factor);
+            T d = factory.build(factor);
+            return div(mul(x, d), mul(y, d), factor);
         }
         
         List<Integer> guesses = new ArrayList<>();
-        BigInt dividend;
-        BigInt mulRes;
-        BigInt rest = new BigInt();
+        T dividend;
+        T mulRes;
+        T rest = factory.build();
         int indexR = y.digits.length;
         int[] digits = Arrays.copyOfRange(x.digits, 0, y.digits.length);
         boolean firstRun = true;
         int guess;
         
         while(indexR < x.digits.length || firstRun) {
-            dividend = new BigInt(digits);
-            if (dividend.lt(y)) {
+            dividend = factory.build(digits);
+            if (lt(dividend, y)) {
                 dividend.shiftLeftBy(1);
                 dividend.digits[dividend.digits.length - 1] = x.digits[indexR];
                 indexR++;
             }
-            guess = Helper.guess(dividend, y);
+            guess = helper.guess(dividend, y);
             guesses.add(guess);
-            mulRes = new BigInt(guess).mul(y);
-            rest = dividend.sub(mulRes);
+            mulRes = (T) factory.build(guess).mul(y);
+            rest = (T) dividend.sub(mulRes);
             digits = rest.digits;
             firstRun = false;
         }
@@ -235,22 +252,22 @@ public class BigIntOperations {
             ds[i] = g;
         }
         
-        BigInt res = new BigInt(ds);
+        T res = factory.build(ds);
         
         if (factor != 1) {
             /* dividend and divisor were multiplied by a factor,
                thus the rest needs to be divided by this factor */
-            rest = rest.div(new BigInt(factor)).quotient;
+            rest = (T) div(rest, factory.build(factor)).quotient;
         }
         return new DivisionResult(res, rest);
     }
     
-    static BigInt mod(BigInt x, BigInt m) {
-        return x.div(m).rest;
+    T mod(T x, T m) {
+        return (T) div(x, m).rest;
     }
     
     // https://courses.csail.mit.edu/6.006/spring11/exams/notes3-karatsuba
-    static BigInt karatsuba(BigInt x, BigInt y) {
+    T karatsuba(T x, T y) {
         int size = Math.max(x.digits.length, y.digits.length);
         int KARATSUBA_LIMIT = 20;
         if (size <= KARATSUBA_LIMIT) {
@@ -263,96 +280,91 @@ public class BigIntOperations {
         x.extendWithZeros(size);
         y.extendWithZeros(size);
         
-        BigInt[] parts = Helper.getParts(x, y);
+        T[] parts = helper.getParts(x, y);
         
-        BigInt xH = parts[0]; // xHigh
-        BigInt xL = parts[1]; // xLow
-        BigInt yH = parts[2]; // yHigh
-        BigInt yL = parts[3]; // yLow
+        T xH = parts[0]; // xHigh
+        T xL = parts[1]; // xLow
+        T yH = parts[2]; // yHigh
+        T yL = parts[3]; // yLow
         
-        BigInt k = xH.add(xL);
-        BigInt l = yH.add(yL);
+        T k = add(xH, xL);
+        T l = add(yH, yL);
         
-        BigInt a = karatsuba(xH, yH);
-        BigInt d = karatsuba(xL, yL);
-        BigInt e1 = karatsuba(k, l);
-        BigInt e2 = e1.sub(a);
-        BigInt e = e2.sub(d);
+        T a = karatsuba(xH, yH);
+        T d = karatsuba(xL, yL);
+        T e1 = karatsuba(k, l);
+        T e2 = sub(e1, a);
+        T e = sub(e2, d);
         
-        boolean g = a.isNeg() || d.isNeg() || e.isNeg();
+        a.shiftLeftBy(2*baseExponent);
+        e.shiftLeftBy(baseExponent);
         
-        BigInt res1 = a.shiftLeftBy(2*baseExponent);
-        BigInt res2 = e.shiftLeftBy(baseExponent);
-        
-        return res1.add(res2).add(d);   
+        return add(add(a, e), d);
     }
     
-    private static BigInt pow(BigInt x, int e, BigInt m, boolean withMod) {
+    private T pow(T x, int e, T m, boolean withMod) {
         if (e < 0) throw new IllegalArgumentException("Negative exponents are not supported");
         if (e == 1) return x;
-        if (e == 0) return BigInt.ONE;
-        if (m.lte(ZERO)) throw new IllegalArgumentException("The modul must be positive, but was " + m.toString() + ".");
+        if (e == 0) return ONE;
+        if (lte(m, ZERO)) throw new IllegalArgumentException("The modul must be positive, but was " + m.toString() + ".");
         
-        BigInt res = BigInt.ONE;
-        if (e == 0) {
-            return res;
-        }
+        T res = ONE;
         String bits = Integer.toBinaryString(e);
         for(int i = 0; i < bits.length(); i++) {
-            res = res.mul(res);
+            res = mul(res, res);
             if(withMod) {
-                res = res.mod(m);
+                res = mod(res, m);
             }
             if (bits.charAt(i) == '1') {
-                res = res.mul(x);
+                res = mul(res, x);
                 if(withMod) {
-                    res = res.mod(m);
+                    res = mod(res, m);
                 }
             }
         }
         return res;
     }
     
-    static BigInt pow(BigInt x, int e) {
+    T pow(T x, int e) {
         // The module will not be used in the case
-        return pow(x, e, BigInt.ONE, false);
+        return pow(x, e, ONE, false);
     }
     
-    static BigInt powMod(BigInt x, int e, BigInt m) {
+    T powMod(T x, int e, T m) {
         return pow(x, e, m, true);
     }
     
-    static BigInt powMod(BigInt a, BigInt n, BigInt m) {
-        BigInt res = BigInt.ONE;
-        BigInt t = new BigInt(a);
-        while(n.gt(BigInt.ZERO)) {
-            if(n.mod(BigInt.TWO).equals(BigInt.ONE)) {
-                res = res.mul(t).mod(m);
+    T powMod(T a, T n, T m) {
+        T res = ONE;
+        T t = factory.build(a);
+        while(gt(n, ZERO)) {
+            if(mod(n, TWO).equals(ONE)) {
+                res = mod(mul(res, t), m);
             }
-            t = t.mul(t).mod(m);
-            n = n.div(BigInt.TWO).quotient;
+            t = mod(mul(t, t), m);
+            n = (T) div(n, TWO).quotient;
         }
         return res;
     }
     
-    static BigInt powModPrim(BigInt x, int e, BigInt p) throws Exception {
-        BigInt pLow = p.sub(BigInt.ONE);
-        if(new BigInt(e).lt(pLow)) {
+    T powModPrim(T x, int e, T p) throws Exception {
+        T pLow = sub(p, ONE);
+        if(lt(factory.build(e), pLow)) {
             // e < p - 1
             return powMod(x, e, p);
         }
         if(x.lt(p)) {
-            e = new BigInt(e).mod(pLow).toInt();
+            e = mod(factory.build(e), pLow).toInt();
             return powMod(x, e, p);
         }
-        if(gcd(x, p).equals(BigInt.ONE)) {
+        if(gcd(x, p).equals(ONE)) {
             // gcd(x, p) == 1
-            e = new BigInt(e).mod(pLow).toInt();
+            e = factory.build(e).mod(pLow).toInt();
         }
         return powMod(x, e, p);
     }
     
-    static BigInt gcd(BigInt x, BigInt y) {
+    T gcd(T x, T y) {
         if (x.isZero() && y.isZero()) { throw new IllegalArgumentException("Both numbers must not be ZERO"); }
         if (x.isZero()) { return y; }
         if (y.isZero()) { return x; }
@@ -360,59 +372,60 @@ public class BigIntOperations {
         if (y.isNeg()) { y.sign = true; }
         
         // What is a good limit here??
-        if(Math.abs(x.digits.length - y.digits.length) > 5) {
+        if(Math.abs(x.digits.length - y.digits.length) > GCD_MAX_LENGTH_DIFF) {
             if(x.lt(y)) {
-                Helper.exchange(x, y);
+                helper.exchange(x, y);
             }
-            x = x.mod(y);
+            x = mod(x, y);
             //return gcd(x.mod(y), y);
         }
-        
+        int steps = 0;
         while(y.gt(ZERO)) {
+            steps++;
             if (y.lt(x)) {
-                Helper.exchange(x, y);
+                helper.exchange(x, y);
             }
-            y = y.sub(x);
+            y = sub(y, x);
         }
-        
+
         return x;
     }
     
-    static GcdLinComb egcd(BigInt a, BigInt b) {
+    GcdLinComb egcd(T a, T b) {
         
         // TODO: check for valid a, b
         
-        BigInt u = BigInt.ONE; BigInt v = new BigInt(0);
-        BigInt s = new BigInt(0); BigInt t = BigInt.ONE;
-        BigInt uO, vO, q;
+        T u = ONE; T v = factory.build();
+        T s = factory.build(); T t = ONE;
+        T uO, vO, q;
         DivisionResult dv = a.div(b);
-        q = dv.quotient;
+        q = (T) dv.quotient;
         
         while(!b.isZero()) {
             uO = u;
             vO = v;
             
-            u = new BigInt(s);
-            v = new BigInt(t);
+            u = factory.build(s);
+            v = factory.build(t);
             
-            s = uO.sub(q.mul(s));
-            t = vO.sub(q.mul(t));
+            s = sub(uO, mul(q, s));
+            t = sub(vO, mul(q, t));
             
             a = b;
-            b = dv.rest;
+            b = (T) dv.rest;
             
             if(!b.isZero()) {
                 dv = a.div(b);
             }
             
-            q = dv.quotient;
+            q = (T) dv.quotient;
             
         }
         
         return new GcdLinComb(a, u, v);
     }
     
-    public static boolean equals(BigInt x, BigInt y) {
+    public boolean equals(T x, T y) {
         if (x.sign != y.sign || x.digits.length != y.digits.length) {
             return false;
         }
@@ -427,7 +440,7 @@ public class BigIntOperations {
     }
     
     // Returns true if x is greater than y
-    public static boolean gt(BigInt x, BigInt y) {
+    public boolean gt(T x, T y) {
         int xl = x.digits.length;
         int yl = y.digits.length;
         if (xl < yl) {
@@ -450,15 +463,15 @@ public class BigIntOperations {
         return false;
     }
     
-    public static boolean lt(BigInt x, BigInt y) {
+    public boolean lt(T x, T y) {
         return !equals(x, y) && !gt(x, y);
     }
-
-    static boolean gte(BigInt x, BigInt y) {
+    
+    boolean gte(T x, T y) {
         return equals(x, y) || gt(x, y);
     }
 
-    static boolean lte(BigInt x, BigInt y) {
+    boolean lte(T x, T y) {
         return equals(x, y) || lt(x, y);
     }
     
