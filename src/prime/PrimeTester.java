@@ -1,6 +1,6 @@
 package prime;
 
-import bigint.BigInt;
+import bigint.BigInt32;
 import bigint.BigIntFactory;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,21 +9,19 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author Jakob Pupke
  */
-abstract class PrimeTester<T extends BigInt> {
+abstract class PrimeTester {
 
-    T n;
-    T nMinusOne;
-    T exponent;
+    BigInt32 n;
+    BigInt32 nMinusOne;
+    BigInt32 exponent;
     // Concurrency control
     private final Control control = new Control();
-    protected BigIntFactory<T> factory;
-    private Generator<T> generator;
+    private Generator generator;
 
-    PrimeTester(T n, BigIntFactory<T> fact) {
+    PrimeTester(BigInt32 n) {
         this.n = n;
-        nMinusOne = (T) n.dec();
-        this.factory = fact;
-        this.generator = new Generator<>(fact);
+        nMinusOne = (BigInt32) n.dec();
+        this.generator = new Generator();
     }
 
     private class Control {
@@ -38,24 +36,21 @@ abstract class PrimeTester<T extends BigInt> {
             2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37
     };
 
-    abstract protected boolean condition(T result);
+    abstract protected boolean condition(BigInt32 result);
 
     boolean passesPreTest() {
-        if(n.lte(factory.getOne()))
+        if(n.lte(BigInt32.Factory.ONE))
             return false;
 
-        if(n.isEven() && !n.equals(factory.getTwo()))
-            return false;
-
-        return true;
+        return !(n.isEven() && !n.equals(BigInt32.Factory.TWO));
     }
 
     boolean isInFirstPrimes() {
-        if(n.gt(factory.build(37))) {
+        if(n.gt(new BigInt32(37))) {
             return false;
         }
         for(int i : FIRST_PRIMES) {
-            if(n.equals(factory.build(i))) {
+            if(n.equals(new BigInt32(i))) {
                 return true;
             }
         }
@@ -79,12 +74,12 @@ abstract class PrimeTester<T extends BigInt> {
     }
 
     boolean isPrime(int[] bases) {
-        T a;
-        T res;
+        BigInt32 a;
+        BigInt32 res;
 
         for(int base : bases) {
-            a = factory.build(base);
-            res = (T) a.powMod(exponent, n);
+            a = new BigInt32(base);
+            res = (BigInt32) a.powMod(exponent, n);
             if(condition(res))
                 return false;
         }
@@ -99,10 +94,10 @@ abstract class PrimeTester<T extends BigInt> {
             size = n.getSize();
         else
             size = ThreadLocalRandom.current().nextInt(MIN, n.getSize() + 1);
-        T a = generator.getRandomOdd(size);
+        BigInt32 a = generator.getRandomOdd(size);
         if(a.gte(n))
             a = nMinusOne;
-        T res = (T) a.powMod(exponent, n);
+        BigInt32 res = (BigInt32) a.powMod(exponent, n);
         return condition(res);
     }
 

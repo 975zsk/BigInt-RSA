@@ -11,10 +11,10 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterEulerTest extends PrimeTesterTest<PrimeTesterEuler, BigInt32> {
+public class PrimeTesterEulerTest extends PrimeTesterTest<PrimeTesterEuler> {
 
     public PrimeTesterEulerTest() {
-        super(new PrimeTesterEuler.Factory<>(), new BigInt32.Factory());
+        super(new PrimeTesterEuler.Factory());
     }
     
     @Test

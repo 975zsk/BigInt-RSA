@@ -12,10 +12,10 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterMillerRabinTest extends PrimeTesterTest<PrimeTesterMillerRabin, BigInt32> {
+public class PrimeTesterMillerRabinTest extends PrimeTesterTest<PrimeTesterMillerRabin> {
 
     public PrimeTesterMillerRabinTest() {
-        super(new PrimeTesterMillerRabin.Factory<>(), new BigInt32.Factory());
+        super(new PrimeTesterMillerRabin.Factory());
     }
 
     @Test

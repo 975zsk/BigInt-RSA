@@ -1,27 +1,26 @@
 package prime;
 
-import bigint.BigInt;
-import bigint.BigIntFactory;
+import bigint.BigInt32;
 
 /**
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterFermat<T extends BigInt> extends PrimeTester<T> {
+public class PrimeTesterFermat extends PrimeTester {
 
-    public PrimeTesterFermat(T n, BigIntFactory<T> fact) {
-        super(n, fact);
+    PrimeTesterFermat(BigInt32 n) {
+        super(n);
         exponent = nMinusOne;
     }
 
     @Override
-    protected boolean condition(T result) {
-        return !result.equals(factory.getOne());
+    protected boolean condition(BigInt32 result) {
+        return !result.equals(BigInt32.Factory.ONE);
     }
     
-    public static class Factory<E extends BigInt> implements TesterFactory<PrimeTesterFermat, E> {
-        public PrimeTesterFermat build(E number, BigIntFactory<E> fact) {
-            return new PrimeTesterFermat<>(number, fact);
+    public static class Factory implements TesterFactory<PrimeTesterFermat> {
+        public PrimeTesterFermat build(BigInt32 number) {
+            return new PrimeTesterFermat(number);
         }
     }
 

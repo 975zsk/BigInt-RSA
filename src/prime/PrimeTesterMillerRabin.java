@@ -1,46 +1,47 @@
 package prime;
 
 import bigint.BigInt;
+import bigint.BigInt32;
 import bigint.BigIntFactory;
 
 /**
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterMillerRabin<T extends BigInt> extends PrimeTester<T> {
-    
-    T s;
+public class PrimeTesterMillerRabin extends PrimeTester {
 
-    public PrimeTesterMillerRabin(T n, BigIntFactory<T> fact) {
-        super(n, fact);
+    BigInt32 s;
+
+    public PrimeTesterMillerRabin(BigInt32 n) {
+        super(n);
         // calculate d and s
-        T d = fact.build(nMinusOne); // copy
-        s = fact.getZero();
+        BigInt32 d = new BigInt32(nMinusOne); // copy
+        s = BigInt32.Factory.ZERO;
         while(d.isEven()) {
-            d = (T) d.div(fact.getTwo()).getQuotient();
-            s = (T) s.add(fact.getOne());
+            d = (BigInt32) d.div(BigInt32.Factory.TWO).getQuotient();
+            s = (BigInt32) s.add(BigInt32.Factory.ONE);
         }
         exponent = d;
     }
 
     @Override
-    protected boolean condition(T result) {
-        if(result.equals(factory.getOne()))
+    protected boolean condition(BigInt32 result) {
+        if(result.equals(BigInt32.Factory.ONE))
             return false;
         while(s.isPos()) {
             if(result.equals(nMinusOne))
                 return false;
-            result = (T) result.mul(factory.getTwo()).mod(n);
-            if(result.equals(factory.getOne()))
+            result = (BigInt32) result.mul(BigInt32.Factory.TWO).mod(n);
+            if(result.equals(BigInt32.Factory.ONE))
                 return true;
-            s = (T) s.dec();
+            s = (BigInt32) s.dec();
         }
         return true;
     }
     
-    public static class Factory<E extends BigInt> implements TesterFactory<PrimeTesterMillerRabin, E> {
-        public PrimeTesterMillerRabin build(E number, BigIntFactory<E> fact) {
-            return new PrimeTesterMillerRabin<>(number, fact);
+    public static class Factory implements TesterFactory<PrimeTesterMillerRabin> {
+        public PrimeTesterMillerRabin build(BigInt32 number) {
+            return new PrimeTesterMillerRabin(number);
         }
     }
     

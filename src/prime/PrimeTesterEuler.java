@@ -1,28 +1,27 @@
 package prime;
 
-import bigint.BigInt;
-import bigint.BigIntFactory;
+import bigint.BigInt32;
 
 /**
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterEuler<T extends BigInt> extends PrimeTester<T> {
+public class PrimeTesterEuler extends PrimeTester {
 
-    PrimeTesterEuler(T n, BigIntFactory<T> fact) {
-        super(n, fact);
-        exponent = (T) nMinusOne.div(fact.getTwo()).getQuotient(); //(n -1) / 2
+    PrimeTesterEuler(BigInt32 n) {
+        super(n);
+        exponent = (BigInt32) nMinusOne.div(BigInt32.Factory.TWO).getQuotient(); //(n -1) / 2
     }
 
     @Override
-    protected boolean condition(T result) {
-        return !( result.equals(factory.getOne()) || nMinusOne.equals(result) );
+    protected boolean condition(BigInt32 result) {
+        return !( result.equals(BigInt32.Factory.ONE) || nMinusOne.equals(result) );
     }
 
 
-    public static class Factory<E extends BigInt> implements TesterFactory<PrimeTesterEuler, E> {
-        public PrimeTesterEuler build(E number, BigIntFactory<E> fact) {
-            return new PrimeTesterEuler<>(number, fact);
+    public static class Factory implements TesterFactory<PrimeTesterEuler> {
+        public PrimeTesterEuler build(BigInt32 number) {
+            return new PrimeTesterEuler(number);
         }
     }
 }

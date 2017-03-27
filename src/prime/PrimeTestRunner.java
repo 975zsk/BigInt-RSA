@@ -1,7 +1,6 @@
 package prime;
 
-import bigint.BigInt;
-import bigint.BigIntFactory;
+import bigint.BigInt32;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,25 +14,23 @@ import java.util.concurrent.Future;
  *
  * @author Jakob Pupke
  */
-public class PrimeTestRunner<T extends PrimeTester, E extends BigInt> {
+public class PrimeTestRunner<T extends PrimeTester> {
     
     private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     private int roundsPerThread;
     private T tester;
-    private TesterFactory<T, E> fact;
-    private BigIntFactory<E> bigIntFactory;
+    private TesterFactory<T> fact;
     
-    public PrimeTestRunner(TesterFactory<T, E> fact, BigIntFactory<E> bigIntFac) {
+    public PrimeTestRunner(TesterFactory<T> fact) {
         this.fact = fact;
-        this.bigIntFactory = bigIntFac;
     }
     
-    boolean isPrime(E number, int rounds) {
+    boolean isPrime(BigInt32 number, int rounds) {
         return isPrime(number, rounds, true);
     }
     
-    public boolean isPrime(E number, int rounds, boolean checkFirstPrimes) {
-        this.tester = fact.build(number, bigIntFactory);
+    public boolean isPrime(BigInt32 number, int rounds, boolean checkFirstPrimes) {
+        this.tester = fact.build(number);
         
         if(!tester.passesPreTest()) {
             return false;
@@ -87,8 +84,8 @@ public class PrimeTestRunner<T extends PrimeTester, E extends BigInt> {
         return true;
     }
     
-    boolean isPrime(E number, int[] bases) {
-        this.tester = fact.build(number, bigIntFactory);
+    boolean isPrime(BigInt32 number, int[] bases) {
+        this.tester = fact.build(number);
         return tester.isPrime(bases);
     }
 }

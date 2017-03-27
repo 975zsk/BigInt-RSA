@@ -8,14 +8,15 @@ package bigint;
  * so we have to substract 1 --> Integer.MAX_VALUE - 1 is the base
  */
 public class BigInt32 extends BigInt {
-    static final int BASE = Integer.MAX_VALUE - 1;
+    public static final int BASE = Integer.MAX_VALUE - 1;
     // This is only used for converting a string of digits to BigInt32
     static final BigIntDec XBASE = new BigIntDec(BASE);
     private static BigIntOperations<BigInt32> operations = new BigIntOperations<>(new BigInt32.Factory());
 
     public static class Factory implements BigIntFactory<BigInt32> {
 
-        static BigInt32 ONE = new BigInt32(1);
+        public static BigInt32 ONE = new BigInt32(1);
+        public static BigInt32 TWO = new BigInt32(2);
         public static BigInt32 ZERO = new BigInt32();
 
         @Override

@@ -1,11 +1,11 @@
 package prime;
 
-import bigint.BigIntFactory;
+import bigint.BigInt32;
 
 /**
  *
  * @author Jakob Pupke
  */
-public interface TesterFactory<T, E> {
-    T build(E number, BigIntFactory<E> fact);
+public interface TesterFactory<T> {
+    T build(BigInt32 number);
 }
