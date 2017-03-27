@@ -78,7 +78,7 @@ abstract class PrimeTester<T extends BigInt> {
         return control.isPrime;
     }
 
-    protected boolean isPrime(T number, int[] bases) {
+    protected boolean isPrime(int[] bases) {
         T a;
         T res;
 

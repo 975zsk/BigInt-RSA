@@ -1,5 +1,7 @@
 package prime;
 
+import bigint.BigInt;
+import bigint.BigInt32;
 import bigint.BigIntDec;
 import org.junit.Test;
 
@@ -12,39 +14,39 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Jakob Pupke
  */
-public class PrimeTesterMillerRabinTest extends PrimeTesterTest<PrimeTesterMillerRabin, BigIntDec> {
+public class PrimeTesterMillerRabinTest extends PrimeTesterTest<PrimeTesterMillerRabin, BigInt32> {
 
     public PrimeTesterMillerRabinTest() {
-        super(new PrimeTesterMillerRabin.Factory<>(), new BigIntDec.Factory());
+        super(new PrimeTesterMillerRabin.Factory<>(), new BigInt32.Factory());
     }
-    
+
     @Test
     public void testIsPrime() throws ExecutionException {
         runIsPrimeTest();
     }
-    
+
     @Test
     public void pseudo() {
         // Absolute Euler Pseudo Primes. Miller-Rabin correctly proves that they are not primes ;)
-        
-        BigIntDec pseudo = new BigIntDec(1729);
+
+        BigInt32 pseudo = new BigInt32(1729);
         assertFalse(tester.isPrime(pseudo, ROUNDS));
-        
-        pseudo = new BigIntDec(2465);
+
+        pseudo = new BigInt32(2465);
         assertFalse(tester.isPrime(pseudo, ROUNDS));
-        
+
         // Miller Rabin fails here
-        pseudo = new BigIntDec(2047);
+        pseudo = new BigInt32(2047);
         assertTrue(tester.isPrime(pseudo, new int[] {
             2
         }));
-        
-        pseudo = new BigIntDec(25351);
+
+        pseudo = new BigInt32(25351);
         assertTrue(tester.isPrime(pseudo, new int[] {
             5
         }));
-        
-        pseudo = new BigIntDec(1111);
+
+        pseudo = new BigInt32(1111);
         assertTrue(tester.isPrime(pseudo, new int[] {
             6
         }));

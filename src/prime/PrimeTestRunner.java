@@ -43,7 +43,7 @@ public class PrimeTestRunner<T extends PrimeTester, E extends BigInt> {
             return true;
         }
         
-        if(checkFirstPrimes && !tester.isPrime(number, PrimeTester.FIRST_PRIMES)) {
+        if(checkFirstPrimes && !tester.isPrime(PrimeTester.FIRST_PRIMES)) {
             return false;
         }
         
@@ -89,6 +89,6 @@ public class PrimeTestRunner<T extends PrimeTester, E extends BigInt> {
     
     public boolean isPrime(E number, int[] bases) {
         this.tester = fact.build(number, bigIntFactory);
-        return tester.isPrime(number, bases);
+        return tester.isPrime(bases);
     }
 }
