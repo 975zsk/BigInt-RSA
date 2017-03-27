@@ -20,8 +20,7 @@ public final class Rsa<T extends BigInt> {
     int size = 15;
     int rounds = 20;
     
-    PrimeTestRunner<PrimeTesterMillerRabin, T> tester;
-    //PrimeTestRunner<PrimeTesterEuler, T> tester;
+    PrimeTestRunner<PrimeTesterEuler, T> tester;
     T p;
     T q;
     T n;
@@ -70,7 +69,7 @@ public final class Rsa<T extends BigInt> {
 
     private void setFactoryAndTester(BigIntFactory<T> fact) {
         this.factory = fact;
-        tester = new PrimeTestRunner<>(new PrimeTesterMillerRabin.Factory(), fact);
+        tester = new PrimeTestRunner<>(new PrimeTesterEuler.Factory(), fact);
     }
     
     private void setRandomPrimes() throws InterruptedException, ExecutionException {
