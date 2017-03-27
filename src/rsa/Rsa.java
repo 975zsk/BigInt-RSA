@@ -16,8 +16,8 @@ import java.util.concurrent.*;
  */
 public final class Rsa<T extends BigInt> {
     
-    int size = 15;
-    int rounds = 20;
+    private int size = 15;
+    private int rounds = 20;
     
     private PrimeTestRunner<PrimeTesterEuler, T> tester;
     private Generator<T> generator;
