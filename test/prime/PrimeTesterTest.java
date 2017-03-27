@@ -11,7 +11,6 @@ import static junit.framework.TestCase.assertTrue;
 /**
  *
  * @author Jakob Pupke
- * @param <T>
  */
 @Ignore("All PrimesTester*Test classes inherit from this class.")
 public abstract class PrimeTesterTest<T extends PrimeTester> {
