@@ -113,6 +113,7 @@ public class RsaTest {
 
         // Some random message
         BigInt32 plain = generator.getRandom(10);
+        System.out.println(plain);
         BigInt32 cipher = Rsa.encrypt(keys.publicKey, plain);
         BigInt32 deciphered = Rsa.decrypt(keys.secretKey, cipher);
         assertEquals(plain.toString(), deciphered.toString());

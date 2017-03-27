@@ -5,7 +5,6 @@ import bigint.BigIntFactory;
 import prime.Generator;
 import prime.PrimeTestRunner;
 import prime.PrimeTesterEuler;
-import prime.PrimeTesterMillerRabin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +30,11 @@ public final class Rsa<T extends BigInt> {
     Generator<T> generator;
     
     public Rsa(BigIntFactory<T> fact) {
-        setFactoryAndTester(fact);
-        this.generator = new Generator<>(fact);
+        setup(fact);
     }
     
     public Rsa(T e, int size, BigIntFactory<T> fact) throws InterruptedException, ExecutionException {
-        setFactoryAndTester(fact);
-        this.generator = new Generator<>(fact);
+        setup(fact);
         this.e = e;
         this.size = size;
         setRandomPrimes();
@@ -45,16 +42,14 @@ public final class Rsa<T extends BigInt> {
     }
     
     public Rsa(T e, BigIntFactory<T> fact) throws InterruptedException, ExecutionException {
-        setFactoryAndTester(fact);
-        this.generator = new Generator<>(fact);
+        setup(fact);
         this.e = e;
         setRandomPrimes();
         calculateValues();
     }
     
     public Rsa(T p, T q, T e, BigIntFactory<T> fact) {
-        setFactoryAndTester(fact);
-        this.generator = new Generator<>(fact);
+        setup(fact);
         this.p = p;
         this.q = q;
         this.e = e;
@@ -67,9 +62,10 @@ public final class Rsa<T extends BigInt> {
         calculateD();
     }
 
-    private void setFactoryAndTester(BigIntFactory<T> fact) {
+    private void setup(BigIntFactory<T> fact) {
         this.factory = fact;
         tester = new PrimeTestRunner<>(new PrimeTesterEuler.Factory(), fact);
+        this.generator = new Generator<>(fact);
     }
     
     private void setRandomPrimes() throws InterruptedException, ExecutionException {
