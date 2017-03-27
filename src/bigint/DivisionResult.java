@@ -4,11 +4,11 @@ package bigint;
  *
  * @author Jakob Pupke
  */
-public class DivisionResult<T extends BigInt> {
-    T quotient;
-    T rest;
+public class DivisionResult {
+    BigInt quotient;
+    BigInt rest;
     
-    DivisionResult(T quotient, T rest) {
+    DivisionResult(BigInt quotient, BigInt rest) {
         this.quotient = quotient;
         this.rest = rest;
     }
@@ -18,7 +18,7 @@ public class DivisionResult<T extends BigInt> {
         return this;
     }
     
-    public T getQuotient() {
+    public BigInt getQuotient() {
         return quotient;
     }
 }

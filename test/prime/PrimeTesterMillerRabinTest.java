@@ -1,8 +1,6 @@
 package prime;
 
-import bigint.BigInt;
 import bigint.BigInt32;
-import bigint.BigIntDec;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;

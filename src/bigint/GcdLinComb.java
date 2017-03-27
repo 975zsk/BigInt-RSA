@@ -4,12 +4,12 @@ package bigint;
  *
  * @author Jakob Pupke
  */
-public class GcdLinComb<T extends BigInt> {
-    T gcd;
-    public T u;
-    T v;
+public class GcdLinComb {
+    BigInt gcd;
+    public BigInt u;
+    BigInt v;
     
-    GcdLinComb(T gcd, T u, T v) {
+    GcdLinComb(BigInt gcd, BigInt u, BigInt v) {
         this.gcd = gcd;
         this.u = u;
         this.v = v;

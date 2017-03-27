@@ -379,9 +379,7 @@ public class BigIntOperations<T extends BigInt> {
             x = mod(x, y);
             //return gcd(x.mod(y), y);
         }
-        int steps = 0;
         while(y.gt(ZERO)) {
-            steps++;
             if (y.lt(x)) {
                 helper.exchange(x, y);
             }

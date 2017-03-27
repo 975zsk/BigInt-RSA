@@ -162,8 +162,6 @@ public abstract class BigInt {
     public abstract BigInt neg();
     public abstract BigInt abs();
 
-    public abstract BigInt inc();
     public abstract BigInt inc(int by);
     public abstract BigInt dec();
-    public abstract BigInt dec(int by);
 }

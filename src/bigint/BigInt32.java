@@ -84,14 +84,14 @@ public class BigInt32 extends BigInt {
             number = "0";
         }
         BigIntDec val = new BigIntDec(number);
-        DivisionResult<BigIntDec> divResult;
+        DivisionResult divResult;
         BigIntDec rem;
         digits = new int[getRequiredSize(number)];
         int i = digits.length - 1;
         while(val.gt(BigIntDec.Factory.ZERO)) {
             divResult = val.div(XBASE);
-            rem = divResult.rest;
-            val = divResult.quotient;
+            rem = (BigIntDec) divResult.rest;
+            val = (BigIntDec) divResult.quotient;
             digits[i] = Integer.parseInt(rem.toString());
             i--;
         }
@@ -159,11 +159,6 @@ public class BigInt32 extends BigInt {
     }
 
     @Override
-    public BigInt inc() {
-        return add(Factory.ONE);
-    }
-
-    @Override
     public BigInt inc(int by) {
         return add(new BigInt32(by));
     }
@@ -171,10 +166,5 @@ public class BigInt32 extends BigInt {
     @Override
     public BigInt dec() {
         return sub(Factory.ONE);
-    }
-
-    @Override
-    public BigInt dec(int by) {
-        return sub(new BigInt32(by));
     }
 }

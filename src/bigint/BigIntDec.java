@@ -175,11 +175,6 @@ public class BigIntDec extends BigInt {
     }
 
     @Override
-    public BigInt inc() {
-        return add(Factory.ONE);
-    }
-
-    @Override
     public BigInt inc(int by) {
         return add(new BigIntDec(by));
     }
@@ -189,8 +184,4 @@ public class BigIntDec extends BigInt {
         return sub(Factory.ONE);
     }
 
-    @Override
-    public BigInt dec(int by) {
-        return sub(new BigIntDec(by));
-    }
 }
