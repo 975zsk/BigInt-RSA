@@ -19,15 +19,10 @@ public final class Rsa<T extends BigInt> {
     int size = 15;
     int rounds = 20;
     
-    PrimeTestRunner<PrimeTesterEuler, T> tester;
-    T p;
-    T q;
-    T n;
-    T e;
-    T d;
-    T phiN;
-    BigIntFactory<T> factory;
-    Generator<T> generator;
+    private PrimeTestRunner<PrimeTesterEuler, T> tester;
+    private Generator<T> generator;
+
+    T p, q, n, e, d, phiN;
     
     public Rsa(BigIntFactory<T> fact) {
         setup(fact);
@@ -63,7 +58,6 @@ public final class Rsa<T extends BigInt> {
     }
 
     private void setup(BigIntFactory<T> fact) {
-        this.factory = fact;
         tester = new PrimeTestRunner<>(new PrimeTesterEuler.Factory(), fact);
         this.generator = new Generator<>(fact);
     }
@@ -101,17 +95,17 @@ public final class Rsa<T extends BigInt> {
         }
     }
     
-    public Keys generateRSAKeys() {
+    Keys generateRSAKeys() {
         PublicKey publicKey = new PublicKey(e, n);
         SecretKey secretKey = new SecretKey(p, q, d, n);
         return new Keys(secretKey, publicKey);
     }
     
-    public static <T> T encrypt(PublicKey pk, BigInt block) {
+    static <T> T encrypt(PublicKey pk, BigInt block) {
         return (T) block.powMod(pk.e, pk.n);
     }
     
-    public static <T> T decrypt(SecretKey sk, BigInt cipher) {
+    static <T> T decrypt(SecretKey sk, BigInt cipher) {
         return (T) cipher.powMod(sk.d, sk.n);
     }
     
