@@ -19,14 +19,14 @@ abstract class PrimeTester<T extends BigInt> {
     protected BigIntFactory<T> factory;
     private Generator<T> generator;
 
-    public PrimeTester(T n, BigIntFactory<T> fact) {
+    PrimeTester(T n, BigIntFactory<T> fact) {
         this.n = n;
         nMinusOne = (T) n.dec();
         this.factory = fact;
         this.generator = new Generator<>(fact);
     }
 
-    public class Control {
+    private class Control {
         /*
         Threads check this flag to see if another
         thread has found a witness yet
@@ -34,13 +34,13 @@ abstract class PrimeTester<T extends BigInt> {
         private volatile boolean isPrime = true;
     }
 
-    public static final int[] FIRST_PRIMES = {
+    static final int[] FIRST_PRIMES = {
             2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37
     };
 
     abstract protected boolean condition(T result);
 
-    public boolean passesPreTest() {
+    boolean passesPreTest() {
         if(n.lte(factory.getOne()))
             return false;
 
@@ -50,7 +50,7 @@ abstract class PrimeTester<T extends BigInt> {
         return true;
     }
 
-    public boolean isInFirstPrimes() {
+    boolean isInFirstPrimes() {
         if(n.gt(factory.build(37))) {
             return false;
         }
@@ -65,7 +65,7 @@ abstract class PrimeTester<T extends BigInt> {
     /*
     This method is called by the threads spawned by the PrimeTestRunner
     */
-    public boolean testForWitnesses(int rounds) {
+    boolean testForWitnesses(int rounds) {
         int i;
         // Only do this as long as control.isPrime is true
         for(i = 0; i < rounds && control.isPrime; i++) {
@@ -78,7 +78,7 @@ abstract class PrimeTester<T extends BigInt> {
         return control.isPrime;
     }
 
-    protected boolean isPrime(int[] bases) {
+    boolean isPrime(int[] bases) {
         T a;
         T res;
 

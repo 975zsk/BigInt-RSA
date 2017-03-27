@@ -14,7 +14,7 @@ public class PrimeTesterMillerRabin<T extends BigInt> extends PrimeTester<T> {
     public PrimeTesterMillerRabin(T n, BigIntFactory<T> fact) {
         super(n, fact);
         // calculate d and s
-        T d = fact.build(nMinusOne);
+        T d = fact.build(nMinusOne); // copy
         s = fact.getZero();
         while(d.isEven()) {
             d = (T) d.div(fact.getTwo()).getQuotient();

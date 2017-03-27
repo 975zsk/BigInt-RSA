@@ -19,16 +19,16 @@ public class PrimeTestRunner<T extends PrimeTester, E extends BigInt> {
     
     private static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     private int roundsPerThread;
-    T tester;
-    TesterFactory<T, E> fact;
-    BigIntFactory<E> bigIntFactory;
+    private T tester;
+    private TesterFactory<T, E> fact;
+    private BigIntFactory<E> bigIntFactory;
     
     public PrimeTestRunner(TesterFactory<T, E> fact, BigIntFactory<E> bigIntFac) {
         this.fact = fact;
         this.bigIntFactory = bigIntFac;
     }
     
-    public boolean isPrime(E number, int rounds) {
+    boolean isPrime(E number, int rounds) {
         return isPrime(number, rounds, true);
     }
     
@@ -87,7 +87,7 @@ public class PrimeTestRunner<T extends PrimeTester, E extends BigInt> {
         return true;
     }
     
-    public boolean isPrime(E number, int[] bases) {
+    boolean isPrime(E number, int[] bases) {
         this.tester = fact.build(number, bigIntFactory);
         return tester.isPrime(bases);
     }

@@ -9,9 +9,9 @@ import bigint.BigIntFactory;
  */
 public class PrimeTesterEuler<T extends BigInt> extends PrimeTester<T> {
 
-    public PrimeTesterEuler(T n, BigIntFactory<T> fact) {
+    PrimeTesterEuler(T n, BigIntFactory<T> fact) {
         super(n, fact);
-        exponent = (T) nMinusOne.div(fact.getTwo()).getQuotient();
+        exponent = (T) nMinusOne.div(fact.getTwo()).getQuotient(); //(n -1) / 2
     }
 
     @Override
