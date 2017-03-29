@@ -116,13 +116,11 @@ public class BigIntDec extends BigInt {
     }
     
     public BigIntDec(int[] digits) {
-        this.digits = digits;
+        super(digits);
     }
 
-    // Return a copy of that
     public BigIntDec(BigIntDec that) {
-        this.digits = that.digits;
-        this.sign = that.sign;
+        super(that);
     }
     
     public BigIntDec(String num) {

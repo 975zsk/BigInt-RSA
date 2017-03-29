@@ -117,7 +117,7 @@ public class BigInt32 extends BigInt {
     }
 
     public BigInt32(int[] digits) {
-        this.digits = digits;
+        super(digits);
     }
 
     public BigInt32() {

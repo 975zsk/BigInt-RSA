@@ -13,6 +13,16 @@ public abstract class BigInt {
         digits[0] = 0;
     }
 
+    public BigInt(int[] digits) {
+        this.digits = digits;
+    }
+
+    // Return a copy of that
+    public BigInt(BigInt that) {
+        this.digits = that.digits;
+        this.sign = that.sign;
+    }
+
     BigInt setSign(boolean sign) {
         this.sign = sign;
         return this;
