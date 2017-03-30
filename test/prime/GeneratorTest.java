@@ -13,10 +13,10 @@ import static org.junit.Assert.*;
  */
 public class GeneratorTest {
     
-    static int ROUNDS = 1000;
-    static int MIN_SIZE = 1000;
-    static int MAX_SIZE = 2000;
-    Generator generator = new Generator();
+    private final int ROUNDS = 1000;
+    private final int MIN_SIZE = 1000;
+    private final int MAX_SIZE = 2000;
+    private Generator generator = new Generator();
     
     private int getRandSize() {
         return ThreadLocalRandom.current().nextInt(MIN_SIZE, MAX_SIZE);
