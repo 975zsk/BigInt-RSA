@@ -10,7 +10,7 @@ import bigint.BigIntFactory;
  */
 public class PrimeTesterMillerRabin extends PrimeTester {
 
-    BigInt32 s;
+    private BigInt32 s;
 
     public PrimeTesterMillerRabin(BigInt32 n) {
         super(n);

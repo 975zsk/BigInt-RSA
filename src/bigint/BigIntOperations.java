@@ -390,9 +390,6 @@ public class BigIntOperations<T extends BigInt> {
     }
     
     GcdLinComb egcd(T a, T b) {
-        
-        // TODO: check for valid a, b
-        
         T u = ONE; T v = factory.build();
         T s = factory.build(); T t = ONE;
         T uO, vO, q;

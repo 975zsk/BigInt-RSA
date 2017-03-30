@@ -43,18 +43,25 @@ public class PrimeTestRunner<T extends PrimeTester> {
         if(checkFirstPrimes && !tester.isPrime(PrimeTester.FIRST_PRIMES)) {
             return false;
         }
-        
-        // OK randomly choose `a` and run tasks concurrently
-        
-        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
-        
-        List<Future<Boolean>> list = new ArrayList<>();
-        
+
         if(checkFirstPrimes) {
             // We have already checked the first primes
             rounds = rounds - PrimeTester.FIRST_PRIMES.length;
         }
-        
+
+        //return runSingleThreaded(rounds);
+        return runConcurrently(rounds);
+    }
+    
+    boolean isPrime(BigInt32 number, int[] bases) {
+        this.tester = fact.build(number);
+        return tester.isPrime(bases);
+    }
+
+    private boolean runConcurrently(int rounds) {
+        // OK randomly choose `a` and run tasks concurrently
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+        List<Future<Boolean>> list = new ArrayList<>();
         roundsPerThread = rounds / NUM_THREADS;
         for(int i = 0; i < NUM_THREADS; i++) {
             Callable<Boolean> worker = new Callable<Boolean>() {
@@ -66,7 +73,7 @@ public class PrimeTestRunner<T extends PrimeTester> {
             Future<Boolean> submit = executor.submit(worker);
             list.add(submit);
         }
-        
+
         for(Future<Boolean> future : list) {
             try {
                 boolean res = future.get();
@@ -79,13 +86,12 @@ public class PrimeTestRunner<T extends PrimeTester> {
                 return false;
             }
         }
-        
+
         executor.shutdown();
         return true;
     }
-    
-    boolean isPrime(BigInt32 number, int[] bases) {
-        this.tester = fact.build(number);
-        return tester.isPrime(bases);
+
+    private boolean runSingleThreaded(int rounds) {
+        return tester.testForWitnesses(rounds);
     }
 }

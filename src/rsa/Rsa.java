@@ -123,7 +123,6 @@ public final class Rsa {
     
     private void calculatePhiN() {
         phiN = (BigInt32) p.dec().mul(q.dec());
-        // TODO assert that gcd(e, phiN) == 1
     }
     
     private BigInt32 getRandomPrime() {

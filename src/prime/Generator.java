@@ -1,8 +1,6 @@
 package prime;
 
-import bigint.BigInt;
 import bigint.BigInt32;
-import bigint.BigIntFactory;
 
 import java.util.concurrent.ThreadLocalRandom;
 

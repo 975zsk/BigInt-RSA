@@ -10,7 +10,7 @@ public class PrimeTesterEuler extends PrimeTester {
 
     PrimeTesterEuler(BigInt32 n) {
         super(n);
-        exponent = (BigInt32) nMinusOne.div(BigInt32.Factory.TWO).getQuotient(); //(n -1) / 2
+        exponent = (BigInt32) nMinusOne.div(BigInt32.Factory.TWO).getQuotient(); //(n - 1) / 2
     }
 
     @Override

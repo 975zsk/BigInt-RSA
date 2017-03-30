@@ -115,7 +115,7 @@ public abstract class BigInt {
         return getOps().div(this, that);
     }
 
-    BigInt gcd(BigInt that) {
+    public BigInt gcd(BigInt that) {
         return getOps().gcd(this, that);
     }
 

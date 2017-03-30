@@ -11,12 +11,12 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 abstract class PrimeTester {
 
-    BigInt32 n;
-    BigInt32 nMinusOne;
+    final BigInt32 n;
+    final BigInt32 nMinusOne;
     BigInt32 exponent;
     // Concurrency control
     private final Control control = new Control();
-    private Generator generator;
+    private final Generator generator;
 
     PrimeTester(BigInt32 n) {
         this.n = n;
@@ -39,21 +39,20 @@ abstract class PrimeTester {
     abstract protected boolean condition(BigInt32 result);
 
     boolean passesPreTest() {
-        if(n.lte(BigInt32.Factory.ONE))
-            return false;
-
-        return !(n.isEven() && !n.equals(BigInt32.Factory.TWO));
+        // n > 2 && n is odd OR n is 2
+        return (!n.isEven() && n.gt(BigInt32.Factory.TWO)) || n.equals(BigInt32.Factory.TWO);
     }
 
     boolean isInFirstPrimes() {
-        if(n.gt(new BigInt32(37))) {
+        if(n.gt(new BigInt32(FIRST_PRIMES[FIRST_PRIMES.length - 1]))) {
             return false;
         }
+
         for(int i : FIRST_PRIMES) {
-            if(n.equals(new BigInt32(i))) {
+            if(n.equals(new BigInt32(i)))
                 return true;
-            }
         }
+
         return false;
     }
 
