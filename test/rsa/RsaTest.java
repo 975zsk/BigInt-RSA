@@ -103,13 +103,15 @@ public class RsaTest {
 
     @Test
     public void testDecryptEncryptTwo() throws InterruptedException, ExecutionException {
-
+        // Size 10 of BigInt32 is equivalent to 310bit => size 20 = 620bit...
+        // 20 * log(2147483646) / log(2) = 620
+        int size = 10;
         BigInt32 e = new BigInt32("7919");
-        Rsa rsa = new Rsa(e, 10);
+        Rsa rsa = new Rsa(e, size);
         Keys keys = rsa.generateRSAKeys();
 
         // Some random message
-        BigInt32 plain = generator.getRandom(10);
+        BigInt32 plain = generator.getRandom(size);
         BigInt32 cipher = Rsa.encrypt(keys.publicKey, plain);
         BigInt32 deciphered = Rsa.decrypt(keys.secretKey, cipher);
         assertEquals(plain.toString(), deciphered.toString());

@@ -60,12 +60,19 @@ public final class Rsa {
 
     private void setup() {
         tester = new PrimeTestRunner<>(new PrimeTesterEuler.Factory());
-        this.generator = new Generator();
+        generator = new Generator();
     }
     
     private void setRandomPrimes() throws InterruptedException, ExecutionException {
-        // get p and q concurrently
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        p = getRandomPrime();
+        q = getRandomPrime();
+        while(p.equals(q)) {
+            // Ups p == q
+            // This will probably never happen
+            q = getRandomPrime();
+        }
+        // get p and q concurrently (UNSTABLE)
+        /*ExecutorService executor = Executors.newFixedThreadPool(2);
         List<Future<BigInt32>> list = new ArrayList<>();
 
         for(int i = 0; i <= 1; i++) {
@@ -93,7 +100,7 @@ public final class Rsa {
             System.out.println("Execution failed: " + e.getMessage());
         } finally {
             executor.shutdown();
-        }
+        }*/
     }
     
     Keys generateRSAKeys() {
